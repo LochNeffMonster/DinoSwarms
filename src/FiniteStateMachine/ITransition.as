@@ -1,5 +1,7 @@
 package FiniteStateMachine
 {
+    import FiniteStateMachine.conditions.ICondition;
+
 	public interface ITransition
 	{
 		/**
@@ -18,19 +20,19 @@ package FiniteStateMachine
 		 * Generates the action associated with taking this transition.
 		 * @return The action associated with taking this transition.
 		 */
-		function  get action():IAction;
+		function  get action():Function;
 		
 		/**
 		 * Sets the action for enacting the transition.
 		 * @param action Transition action.
 		 */
-		function  set action(type:IAction):void;
+		function  set action(type:Function):void;
 		
 		/**
 		 * Sets the condition that determines if the transition is triggered.
 		 * @param condition A testable condition.
 		 */
-		function  set condition(type:ICondition):void;
+		function  set condition(type:Function):void;
 		
 		/**
 		 * Determines if this transition is triggered.

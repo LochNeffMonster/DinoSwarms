@@ -1,10 +1,12 @@
 package FiniteStateMachine
 {
+    import FiniteStateMachine.conditions.ICondition;
+
 	public class Transition implements ITransition
 	{
 		private var _targetState:IState;
-		private var _action:IAction;
-		private var _condition:ICondition;
+		private var _action:Function;
+		private var _condition:Function;
 		/**
 		 * 
 		 * @param targetState sets the aimed target state
@@ -32,12 +34,12 @@ package FiniteStateMachine
 		 * Generates the action associated with taking this transition.
 		 * @return The action associated with taking this transition.
 		 */
-		public function get action():IAction
+		public function get action():Function
 		{
 			return _action;
 		}
 		
-		public function set action(type:IAction):void
+		public function set action(type:Function):void
 		{
 			_action = type;
 		}
@@ -45,14 +47,15 @@ package FiniteStateMachine
 		 * Sets the condition that determines if the transition is triggered.
 		 * @param condition A testable condition.
 		 */
-		public function set condition(type:ICondition):void
+		public function set condition(type:Function):void
 		{
 			_condition = type;
 		}
 		
 		public function isTriggered():Boolean
 		{
-			return _condition.test();
+			trace(_condition);
+			return _condition();
 		}
 	}
 }

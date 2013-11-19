@@ -9,7 +9,7 @@ package FiniteStateMachine
 		 *   state and any transitions, entrances and exits that may occur.
 		 * @return A collection of actions produced by evaluating the FSM.
 		 */
-		function update():Vector.<IAction>;
+		function update():Array;
 		
 		/**
 		 * Retrieves the current state of the finite state machine.

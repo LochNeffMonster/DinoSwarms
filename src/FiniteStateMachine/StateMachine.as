@@ -3,6 +3,7 @@ package FiniteStateMachine
 	public class StateMachine implements IStateMachine
 	{
 		private var _currentState:IState;
+		public var transitions:Array = [];
 		
 		public function StateMachine()
 		{
@@ -14,22 +15,20 @@ package FiniteStateMachine
 		 *   state and any transitions, entrances and exits that may occur.
 		 * @return A collection of actions produced by evaluating the FSM.
 		 */
-		public function update():Vector.<IAction>
+        //OLD MCCLUSTER IS FUCKING COMING FOR YOU
+		public function update():Array
 		{
-			var actions:Vector.<IAction> = new Vector.<IAction>;
-			var transitions:Vector.<ITransition> = new Vector.<ITransition>;
-			
-			
+			var actions:Array = [];
 			for(var trans:ITransition in transitions){
 				if(trans.isTriggered()){
-					if(_currentState.exitAction != null){
+					if(_currentState.exitAction){
 						actions.push(_currentState.exitAction);
 					}
-					if(trans.action != null){
+					if(trans.action){
 						actions.push(trans.action);
 					}
 					_currentState = trans.targetState;
-					if(_currentState.entryAction != null){
+					if(_currentState.entryAction){
 						actions.push(_currentState.entryAction);
 					}
 					break;
