@@ -25,16 +25,18 @@ package dinosaurs
 			_grassCost = 2;
 			_sandCost = 3;
             graphics.beginFill(0xFF00FF);
-            graphics.drawRect(0,0,TileMap.TILE_SIZE*5,TileMap.TILE_SIZE*5);
+            graphics.drawRect(0,0,TileMap.TILE_SIZE*1,TileMap.TILE_SIZE*1);
             graphics.endFill();
             
             _carnivore = false;
             _stateMachine = new StateMachine();
             //Search
             var search:State = new State();
+			var eat:State = new State();
             search.action = new SearchForFood(this).search;
             _stateMachine.currentState = search;
             var searchTransition:Transition = new Transition();
+			searchTransition.targetState = eat;
             searchTransition.condition = function():Boolean {
 				
 				if(targetPoint){
@@ -63,9 +65,19 @@ package dinosaurs
 			//trace(_stateMachine.transitions[0].isTriggered());
             
             //Eat
-            var eat:State = new State();
             eat.action = new Eat(this).eat;
             searchTransition.targetState = eat;
+			var eatTransition:Transition = new Transition();
+			eatTransition.targetState = search;
+			eatTransition.condition = function():Boolean {		
+					var currentTile:Tile = TileMap.CurrentMap.getTileFromCoord(x,y);
+					if(currentTile is Grass){
+						trace((currentTile as Grass).IsEdible);
+						return !(currentTile as Grass).IsEdible;
+					}
+
+			};
+			_stateMachine.transitions.push(eatTransition);
 
         }
         

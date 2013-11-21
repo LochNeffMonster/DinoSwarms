@@ -8,6 +8,7 @@ import flash.utils.Dictionary;
 
 import events.TileEvent;
 
+import island.tiles.Grass;
 import island.tiles.Tile;
 import island.tiles.Water;
 
@@ -156,8 +157,8 @@ public class TileMap extends Sprite
 	/**Initializes the TileMap events 
 	 */
 	private function init(e:Event):void {
-		stage.addEventListener(TileEvent.ON_TILE,onTileEvent,false,0,true);
-		stage.addEventListener(TileEvent.EAT_GRASS,eatGrass,false,0,true);
+		addEventListener(TileEvent.ON_TILE,onTileEvent,false,0,true);
+		addEventListener(TileEvent.EAT_GRASS,eatGrass,false,0,true);
 		addEventListener(Event.ENTER_FRAME, onUpdate);
 	}
 	
@@ -203,7 +204,12 @@ public class TileMap extends Sprite
 	}
 	
 	private function eatGrass(e:TileEvent):void {
-		
+		var currentTile:Tile = currentMap.tileMap[e.X][e.Y];
+		if (!(currentTile is Grass)){
+			trace("I can't eat that"+currentTile);
+			return;
+		}
+		(currentTile as Grass).onEatGrass();
 	}
 }
 }
