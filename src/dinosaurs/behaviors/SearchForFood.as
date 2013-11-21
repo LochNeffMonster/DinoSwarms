@@ -1,6 +1,8 @@
 package dinosaurs.behaviors
 {    
     import flash.geom.Point;
+	
+	import dinosaurs.Engines.AStar;
     
     import dinosaurs.Dinosaur;
     
@@ -9,6 +11,7 @@ package dinosaurs.behaviors
     
     public class SearchForFood extends Behavior
     {        
+		
         public function SearchForFood(dino:Dinosaur)
         {
             super(dino);
@@ -33,10 +36,20 @@ package dinosaurs.behaviors
             }
             
             if(!_dinosaur.targetPoint){
-				var rand:Number = Math.random();
-                _dinosaur.targetPoint = new Point();
-                _dinosaur.targetPoint.x = (TileMap.WIDTH - 1)*Math.random()*TileMap.TILE_SIZE;
-                _dinosaur.targetPoint.y = (TileMap.HEIGHT - 1)*Math.random()*TileMap.TILE_SIZE;
+				while(!_dinosaur.currentPath || _dinosaur.currentPath.length == 0){
+					var rand:Number = Math.random();
+	                /*_dinosaur.targetPoint = new Point();
+	                _dinosaur.targetPoint.x = (TileMap.WIDTH - 1)*Math.random()*TileMap.TILE_SIZE;
+	                _dinosaur.targetPoint.y = (TileMap.HEIGHT - 1)*Math.random()*TileMap.TILE_SIZE;*/
+					var tmpPoint:Point = new Point(0,0);
+					tmpPoint.x = (TileMap.WIDTH - 1)*Math.random()*TileMap.TILE_SIZE;
+					tmpPoint.y = (TileMap.HEIGHT - 1)*Math.random()*TileMap.TILE_SIZE;
+					trace(TileMap.CurrentMap.getTileFromCoord(Math.floor(_dinosaur.x),Math.floor(_dinosaur.y)));
+					_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmpPoint.x,tmpPoint.y,_dinosaur);
+					trace("bacon");
+				}
+				_dinosaur.targetPoint = _dinosaur.currentPath.splice(0,1);
+				trace(_dinosaur.targetPoint);
             }else{
 				trace(_dinosaur.targetPoint);
                 dx = (_dinosaur.targetPoint.x - _dinosaur.x);

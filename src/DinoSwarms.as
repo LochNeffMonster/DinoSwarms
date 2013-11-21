@@ -11,6 +11,7 @@ package
     import island.generation.layers.MarkovGenerationLayer;
     import island.generation.layers.RandomGenerationLayer;
     import island.tiles.Tile;
+	import island.tiles.Grass;
     
     public class DinoSwarms extends Sprite{
         private var _tileMap:TileMap;
@@ -58,6 +59,8 @@ package
 		
 		private function generationFinished():void{
 			var dino:Gallimimus = new Gallimimus();
+			dino.x = Grass.grass.x;
+			dino.y = Grass.grass.y;
 			addChild(dino);
 		}
     }

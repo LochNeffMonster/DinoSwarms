@@ -20,7 +20,10 @@ package dinosaurs
         public function Gallimimus()
         {
             super();
-            _speed = 6;
+            _speed = 2;
+			_dirtCost = 1;
+			_grassCost = 2;
+			_sandCost = 3;
             graphics.beginFill(0xFF00FF);
             graphics.drawRect(0,0,TileMap.TILE_SIZE*5,TileMap.TILE_SIZE*5);
             graphics.endFill();

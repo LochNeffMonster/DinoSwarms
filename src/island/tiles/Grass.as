@@ -5,6 +5,8 @@ import util.Color;
 
 public class Grass extends Tile
 {
+	public static var grass:Grass;
+	
 	public static const EDIBLE_PERCENT:Number = .5;
 	private static const EAT_RATE:Number = 0.001;
 	public static const GRASS_COLOR:Color = new Color(0.2, 1, 0.2);
@@ -17,11 +19,11 @@ public class Grass extends Tile
 	
 	public function Grass(ediblePercent:Number, growRate:Number){
 		super();
+		grass = this;
 		_traversable = true;
 		_growthPercent = ediblePercent;
 		_isEdible = (ediblePercent > EDIBLE_PERCENT);
 		_growRate = growRate;
-		trace("GAS WUYZ UYJS CREDITA!");
 	}
 	
 	public override function getColor():uint {

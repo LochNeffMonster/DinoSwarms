@@ -6,6 +6,10 @@ package dinosaurs
     
     import FiniteStateMachine.StateMachine;
     
+    import island.tiles.Grass;
+    import island.tiles.Sand;
+    import island.tiles.Tile;
+    
     public class Dinosaur extends Sprite
     {
         public static const MAX_ENERGY:Number = 100;
@@ -14,8 +18,13 @@ package dinosaurs
         protected var _energy:Number;
         protected var _stateMachine:StateMachine;
         protected var _speed:int;
+		
+		protected var _dirtCost:int;
+		protected var _grassCost:int;
+		protected var _sandCost:int;
         
         public var targetPoint:Point;
+		public var currentPath:Array;
         
         public function Dinosaur()
         {
@@ -36,5 +45,21 @@ package dinosaurs
         public function get Speed():int {
             return _speed;
         }
+		
+		public function MoveCost(tile:Tile):int
+		{
+			if(tile is Grass)
+			{
+				if((tile as Grass).IsEdible)
+					return _grassCost;
+				else
+					return _dirtCost;
+			}
+			else if (tile is Sand)
+			{
+				return _sandCost;
+			}
+			return 2;
+		}
     }
 }
