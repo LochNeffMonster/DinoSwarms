@@ -76,32 +76,32 @@ package dinosaurs.Engines
 					{
 						//don't count the current node
 						if (i == 0 && j == 0)
-							continue;
+						{continue;}
 						
-						if(_Pos.x + i < 0 || _Pos.y + j < 0) continue;
-						
+						if(_Pos.x + i < 0 || _Pos.y + j < 0 || _Pos.x + i == TileMap.WIDTH || _Pos.y + j == TileMap.HEIGHT) 
+						{continue;}
 						//don't count untraversable nodes
-						if (!TileMap.CurrentMap.getTileFromCoord(_Pos.x + i, _Pos.y + j).getTraversable())
-							continue;
+						if (!TileMap.CurrentMap.getTileFromCoord(_Pos.x + i, _Pos.y + j).getTraversable()) 
+						{continue;}
 						
 						var tempNode:Node = new Node(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
 							+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
 							GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
-						
-						if (_allNodes[_Pos.x + i][_Pos.y + j] != null)
-						{
-							if (_allNodes[_Pos.x + i][_Pos.y + j].EstimatedCost > tempNode.EstimatedCost)
+
+						if (_allNodes[(_Pos.x + i)][(_Pos.y + j)] is Node) {
+
+							if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].EstimatedCost > tempNode.EstimatedCost)
 							{
-								if (_allNodes[_Pos.x + i][_Pos.y + j].State == 1)
+								if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].State == 1)
 								{
 									UpdateOpenList(tempNode);
-									_allNodes[_Pos.x + i][_Pos.y + j] = tempNode;
+									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
 								}
 								else
 								{
 									AddOpenList(tempNode);
 									trace("added Nodes");
-									_allNodes[_Pos.x + i][_Pos.y + j] = tempNode;
+									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
 								}
 							}
 							else
@@ -111,7 +111,7 @@ package dinosaurs.Engines
 						{
 							AddOpenList(tempNode);
 							trace("added Nodes:");
-							_allNodes[_Pos.x + i][_Pos.y + j] = tempNode;
+							_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
 						}
 					}
 				}
@@ -130,6 +130,7 @@ package dinosaurs.Engines
 			
 			else
 			{
+				trace("ffffffffffffffffooooooooooooooooooooND IT")
 				var returnList:Array;
 				returnList[0] = _currentNode;
 				while (_currentNode != _start)
@@ -145,7 +146,7 @@ package dinosaurs.Engines
 		private function AddOpenList(NewNode:Node):void
 		{
 			//get last position in open list and Estimated Cost of the new node
-			var newCost:Number = NewNode.EstimatedCost();
+			var newCost:Number = NewNode.EstimatedCost;
 			var currPos:int = _openList.length;
 			
 			_openList[currPos] = NewNode;
@@ -153,11 +154,14 @@ package dinosaurs.Engines
 			//sorts the new node up the tree based on its cost
 			while (true)
 			{
-				if (newCost < _openList[currPos / 2].EstimatedCost())
+				var parentNode:int = currPos / 2;
+				if (currPos != 1 && newCost < _openList[parentNode].EstimatedCost)
 				{
-					_openList[currPos] = _openList[currPos / 2];
-					_openList[currPos / 2] = NewNode;
-					currPos = currPos / 2;
+					_openList[currPos] = _openList[parentNode];
+					_openList[parentNode] = NewNode;
+					_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
+					currPos = parentNode;
+					parentNode = currPos / 2;
 				}
 				
 				else
@@ -171,18 +175,19 @@ package dinosaurs.Engines
 		
 		private function PopOpenList():void
 		{
-			_openList[1] = _openList.pop();
 			var currPos:int = 1;
-			var tmpNode:Node = _openList[1];
-			if(_openList.length <  3) return;
+			var tmpNode:Node = _openList.pop();
+			_openList[1] = tmpNode;
 			while (true)
 			{
 				if(!_openList[ (2*currPos)]) break;
-				if(_openList[ (2*currPos)] && !_openList[ (2*currPos) + 1]){
+				else if(_openList[ (2*currPos)] && !_openList[ ((2*currPos) + 1)]){
 					if (tmpNode.EstimatedCost > _openList[ (2 * currPos)].EstimatedCost)
 					{
 						_openList[currPos] = _openList[ (2 * currPos)];
 						_openList[ (2 * currPos)] = tmpNode;
+						_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
+						_nodePos[_openList[(2 * currPos)].Coordinate.x][_openList[(2 * currPos)].Coordinate.y] = (2 * currPos);
 					}
 						
 					else
@@ -190,12 +195,14 @@ package dinosaurs.Engines
 						break;
 					}
 				}
-				if (_openList[ (2 * currPos)].EstimatedCost < _openList[ (2 * currPos) + 1].EstimatedCost)
+				else if (_openList[ (2 * currPos)].EstimatedCost < _openList[ ((2 * currPos) + 1)].EstimatedCost)
 				{
 					if (tmpNode.EstimatedCost > _openList[ (2 * currPos)].EstimatedCost)
 					{
 						_openList[currPos] = _openList[ (2 * currPos)];
 						_openList[ (2 * currPos)] = tmpNode;
+						_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
+						_nodePos[_openList[(2 * currPos)].Coordinate.x][_openList[(2 * currPos)].Coordinate.y] = (2 * currPos);
 					}
 					
 					else
@@ -205,10 +212,12 @@ package dinosaurs.Engines
 				}
 				else
 				{
-					if (tmpNode.EstimatedCost > _openList[ (2 * currPos) + 1].EstimatedCost)
+					if (tmpNode.EstimatedCost > _openList[ ((2 * currPos) + 1)].EstimatedCost)
 					{
-						_openList[currPos] = _openList[ (2 * currPos) + 1];
-						_openList[ (2 * currPos) + 1] = tmpNode;
+						_openList[currPos] = _openList[ ((2 * currPos) + 1)];
+						_openList[ ((2 * currPos) + 1)] = tmpNode;
+						_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
+						_nodePos[_openList[((2 * currPos) + 1)].Coordinate.x][_openList[((2 * currPos) + 1)].Coordinate.y] = ((2 * currPos) + 1);
 					}
 						
 					else
@@ -221,7 +230,7 @@ package dinosaurs.Engines
 		
 		private function UpdateOpenList(RefNode:Node):void
 		{
-			var newCost:Number = RefNode.EstimatedCost();
+			var newCost:Number = RefNode.EstimatedCost;
 			var currPos:int = _nodePos[RefNode.Coordinate.x][RefNode.Coordinate.y];
 			
 			_openList[currPos] =RefNode;
@@ -229,11 +238,18 @@ package dinosaurs.Engines
 			//sorts the ref node up the tree based on its cost
 			while (true)
 			{
-				if (newCost < _openList[currPos / 2].EstimatedCost())
+				if (currPos == 1)
 				{
-					_openList[currPos] = _openList[currPos / 2];
-					_openList[currPos / 2] = RefNode;
+					_nodePos[RefNode.Coordinate.x][RefNode.Coordinate.y] = currPos;
+					break;
+				}
+				else if (newCost < _openList[(currPos / 2)].EstimatedCost)
+				{
+					_openList[currPos] = _openList[(currPos / 2)];
+					_openList[(currPos / 2)] = RefNode;
 					currPos = currPos / 2;
+					_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
+					_nodePos[_openList[(2 / currPos)].Coordinate.x][_openList[(2 / currPos)].Coordinate.y] = (2 / currPos);
 				}
 					
 				else
