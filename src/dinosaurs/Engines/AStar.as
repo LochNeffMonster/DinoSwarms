@@ -189,6 +189,7 @@ package dinosaurs.Engines
 						_openList[ (2 * currPos)] = tmpNode;
 						_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
 						_nodePos[_openList[(2 * currPos)].Coordinate.x][_openList[(2 * currPos)].Coordinate.y] = (2 * currPos);
+						currPos = 2 * currPos;
 					}
 						
 					else
@@ -204,6 +205,7 @@ package dinosaurs.Engines
 						_openList[ (2 * currPos)] = tmpNode;
 						_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
 						_nodePos[_openList[(2 * currPos)].Coordinate.x][_openList[(2 * currPos)].Coordinate.y] = (2 * currPos);
+						currPos = 2 * currPos;
 					}
 					
 					else
@@ -219,6 +221,7 @@ package dinosaurs.Engines
 						_openList[ ((2 * currPos) + 1)] = tmpNode;
 						_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
 						_nodePos[_openList[((2 * currPos) + 1)].Coordinate.x][_openList[((2 * currPos) + 1)].Coordinate.y] = ((2 * currPos) + 1);
+						currPos = 2 * currPos + 1;
 					}
 						
 					else
@@ -249,9 +252,9 @@ package dinosaurs.Engines
 				{
 					_openList[currPos] = _openList[(int)(currPos / 2)];
 					_openList[(int)(currPos / 2)] = RefNode;
-					currPos = currPos / 2;
 					_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
 					_nodePos[_openList[(int)(currPos / 2)].Coordinate.x][_openList[(int)(currPos / 2)].Coordinate.y] = (int)(currPos / 2);
+					currPos = currPos / 2;
 				}
 					
 				else
