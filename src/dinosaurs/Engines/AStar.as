@@ -64,8 +64,9 @@ package dinosaurs.Engines
 				_currentNode = _openList[1];
 				var _Pos:Point = _currentNode.Coordinate;
 				//did we reach our goal?
-				if (_Pos == _end)
+				if (_Pos.x - _end.x >= -1 && _Pos.x - _end.x <= 1 && _Pos.y - _end.y >= -1 && _Pos.y - _end.y <= 1)
 				{
+					var _Pos:Point = _currentNode.Coordinate;
 					break;
 				}
 				
@@ -122,7 +123,7 @@ package dinosaurs.Engines
 				_currentNode.setState(2);
 				_allNodes[_Pos.x][_Pos.y] = _currentNode;
 			}
-			if (_currentNode.Coordinate != _end)
+			if ((_Pos.x - _end.x < -1 || _Pos.x - _end.x > 1) || (_Pos.y - _end.y < -1 || _Pos.y - _end.y > 1))
 			{
 				trace("DIDN't find gaol");
 				return null;
@@ -131,7 +132,7 @@ package dinosaurs.Engines
 			else
 			{
 				trace("ffffffffffffffffooooooooooooooooooooND IT")
-				var returnList:Array;
+				var returnList:Array = [];
 				returnList[0] = _currentNode;
 				while (_currentNode != _start)
 				{
