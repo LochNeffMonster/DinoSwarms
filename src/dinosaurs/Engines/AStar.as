@@ -137,7 +137,7 @@ package dinosaurs.Engines
 				while (_currentNode != _start)
 				{
 					_currentNode = _allNodes[_currentNode.Connection.x][_currentNode.Connection.y];
-					returnList[returnList.length - 1] = _currentNode.Coordinate;
+					returnList[returnList.length] = _currentNode.Coordinate;
 				}
 				
 				return returnList;
