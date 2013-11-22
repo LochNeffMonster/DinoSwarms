@@ -50,7 +50,7 @@ package dinosaurs
 					var targetTile:Tile = TileMap.CurrentMap.getTileFromCoord(targetPoint.x,targetPoint.y);
 					var currentTile:Tile = TileMap.CurrentMap.getTileFromCoord(x,y);
 					if(targetTile != currentTile) return false;
-					if(currentTile is Grass){
+					if(currentTile is Grass && currentPath.length == 0){
 						return (currentTile as Grass).IsEdible;
 					}else{
 						targetPoint = null;
