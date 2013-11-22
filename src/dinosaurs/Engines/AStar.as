@@ -133,7 +133,7 @@ package dinosaurs.Engines
 			{
 				trace("ffffffffffffffffooooooooooooooooooooND IT")
 				var returnList:Array = [];
-				returnList[0] = _currentNode;
+				returnList[0] = _currentNode.Coordinate;
 				while (_currentNode != _start)
 				{
 					_currentNode = _allNodes[_currentNode.Connection.x][_currentNode.Connection.y];

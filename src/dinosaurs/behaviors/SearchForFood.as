@@ -48,7 +48,7 @@ package dinosaurs.behaviors
 					_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmpPoint.x,tmpPoint.y,_dinosaur);
 					trace("bacon");
 				}
-				_dinosaur.targetPoint = _dinosaur.currentPath.splice(0,1);
+				_dinosaur.targetPoint = _dinosaur.currentPath.pop();
 				trace(_dinosaur.targetPoint);
             }else{
 				trace(_dinosaur.targetPoint);
