@@ -150,11 +150,11 @@ package dinosaurs.Engines
 			var currPos:int = _openList.length;
 			
 			_openList[currPos] = NewNode;
-			
+			var parentNode:int = currPos / 2;
 			//sorts the new node up the tree based on its cost
 			while (true)
 			{
-				var parentNode:int = currPos / 2;
+
 				if (currPos != 1 && newCost < _openList[parentNode].EstimatedCost)
 				{
 					_openList[currPos] = _openList[parentNode];
@@ -162,6 +162,7 @@ package dinosaurs.Engines
 					_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
 					currPos = parentNode;
 					parentNode = currPos / 2;
+					_nodePos[NewNode.Coordinate.x][NewNode.Coordinate.y] = currPos;
 				}
 				
 				else
@@ -243,13 +244,14 @@ package dinosaurs.Engines
 					_nodePos[RefNode.Coordinate.x][RefNode.Coordinate.y] = currPos;
 					break;
 				}
-				else if (newCost < _openList[(currPos / 2)].EstimatedCost)
+
+				else if (newCost < _openList[(int)(currPos / 2)].EstimatedCost)
 				{
-					_openList[currPos] = _openList[(currPos / 2)];
-					_openList[(currPos / 2)] = RefNode;
+					_openList[currPos] = _openList[(int)(currPos / 2)];
+					_openList[(int)(currPos / 2)] = RefNode;
 					currPos = currPos / 2;
 					_nodePos[_openList[currPos].Coordinate.x][_openList[currPos].Coordinate.y] = currPos;
-					_nodePos[_openList[(2 / currPos)].Coordinate.x][_openList[(2 / currPos)].Coordinate.y] = (2 / currPos);
+					_nodePos[_openList[(int)(currPos / 2)].Coordinate.x][_openList[(int)(currPos / 2)].Coordinate.y] = (int)(currPos / 2);
 				}
 					
 				else
