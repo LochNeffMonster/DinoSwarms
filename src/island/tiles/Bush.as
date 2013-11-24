@@ -3,7 +3,7 @@ package island.tiles
 import util.Color;
 
 public class Bush extends Tile{
-	public static const BUSH_COLOR:Color = new Color(0.70, 1.22, 0.45);
+	public static const BUSH_COLOR:Color = new Color(0.36, 0.76, 0.05);
 	
 	public function Bush()
 	{

@@ -56,8 +56,8 @@ package
 															[0, 0, 0, 0.8, 0, 0, 0, 0],
 															[0, 0, 0, 0, 1, 0, 0, 0],
 															[0, 0, 0, 0, 0, 1, 0, 0],
-															[0, 0, 0, 0, 0, 0, 0, 0],
-															[0, 0, 0, 0, 0, 0, 0, 0]]);
+															[0, 0, 0, 0, 0, 0, 1, 0],
+															[0, 0, 0, 0, 0, 0, 0, 1]]);
 			fractalLayer.setModel(fractalModel, Tile.DIRT, Tile.GRASS, Tile.SAND, Tile.TREE, Tile.FOREST);
 			_generator.addGenerationLayer(fractalLayer);
 			
@@ -81,19 +81,33 @@ package
 			smoothingLayer.addResolution(1);
 			_generator.addGenerationLayer(smoothingLayer);
 			
-			//Trees UNDER CONSTRUCTION
+			//Trees
 			var treeLayer:MarkovGenerationLayer = new MarkovGenerationLayer(true);
 			treeLayer.setMinMaxResolution(1, 1);
 			var treeModel:MarkovModel = new MarkovModel([[0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
-														  [0, 0, 0, 0, -5, .1, 0, 0],
+														  [0, 0, 0, 0, -1, .1, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0]]);
 			treeLayer.setModel(treeModel, Tile.FOREST);
-			_generator.addGenerationLayer(treeLayer);			
+			_generator.addGenerationLayer(treeLayer);	
+			
+			//Bushes :(
+			var bushLayer:MarkovGenerationLayer = new MarkovGenerationLayer();
+			bushLayer.setMinMaxResolution(1, 1);
+			var bushModel:MarkovModel = new MarkovModel([[0, 0, 0, 0, 0, 0, 0, 0],
+														[0, 0, 0, 0, 0, 0, 0, 0],
+														[0, 0, 0, 0, 0, 0, 0, 0],
+														[0, 0, 0, 0, 0, 0, 0, 0],
+														[0, 0, 0, 0, 0, 0, 0, 0],
+														[0, 0, 0, 0, 0, 0, 0, 0],
+														[0, 0, 0, 0, 0, 0, 0, 0],
+														[0, .005, 0, 0, 0, 0, 0, -1]]);
+			bushLayer.setModel(bushModel, Tile.GRASS);
+			_generator.addGenerationLayer(bushLayer);	
 			
 		}
         
