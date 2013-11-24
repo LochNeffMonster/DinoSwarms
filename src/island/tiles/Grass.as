@@ -7,8 +7,8 @@ import util.Color;
 
 public class Grass extends Tile{
 	public static const EDIBLE_PERCENT:Number = .5;
-	public static const GRASS_COLOR:Color = new Color(0.2, 1, 0.2);
-	public static const DIRT_COLOR:Color = new Color(0.5, 0.3, 0);
+	public static const GRASS_COLOR:Color = new Color(0.3, 1, 0.3);
+	public static const DIRT_COLOR:Color = new Color(0.7, 0.5, 0.2);
 	public static const GROWTH_RES:int = 32;
 	
 	private static const BEGIN_DELAY:int = 120;

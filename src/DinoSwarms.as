@@ -75,6 +75,7 @@ package
 			beachLayer.setModel(beachModel, Tile.WATER);
 			_generator.addGenerationLayer(beachLayer);
 			
+
 				//Laker Layer
 			var lakeLayer:MarkovGenerationLayer = new MarkovGenerationLayer();
 			lakeLayer.setMinMaxResolution(8, 8);        //w   d   g   s   t   f   l   b
@@ -89,26 +90,24 @@ package
 			lakeLayer.setModel(lakeModel, Tile.DIRT, Tile.GRASS, Tile.FOREST, Tile.TREE, Tile.BUSH, Tile.LAKE);
 			_generator.addGenerationLayer(lakeLayer);
 			
-			//Smoothing Layer
-			
+			//Smoothing Layer		
 			var smoothingLayer:SmoothingLayer = new SmoothingLayer(6);
 			smoothingLayer.addResolution(1);
 			_generator.addGenerationLayer(smoothingLayer);
 			
-			//Trees UNDER CONSTRUCTION
+			//Trees
 			var treeLayer:MarkovGenerationLayer = new MarkovGenerationLayer(true);
 			treeLayer.setMinMaxResolution(1, 1);
 			var treeModel:MarkovModel = new MarkovModel([[0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
-														  [0, 0, 0, 0, -5, .1, 0, 0],
+														  [0, 0, 0, 0, -1, .1, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0],
 														  [0, 0, 0, 0, 0, 0, 0, 0]]);
 			treeLayer.setModel(treeModel, Tile.FOREST);
 			_generator.addGenerationLayer(treeLayer);			
-			
 		}
         
         private function init(e:Event):void {
