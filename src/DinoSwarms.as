@@ -56,8 +56,8 @@ package
 															[0, 0, 0, 0.8, 0, 0, 0, 0],
 															[0, 0, 0, 0, 1, 0, 0, 0],
 															[0, 0, 0, 0, 0, 1, 0, 0],
-															[0, 0, 0, 0, 0, 0, 0, 0],
-															[0, 0, 0, 0, 0, 0, 0, 0]]);
+															[0, 0, 0, 0, 0, 0, 1.5, 0],
+															[0, 0, 0, 0, 0, 0, 0, 1]]);
 			fractalLayer.setModel(fractalModel, Tile.DIRT, Tile.GRASS, Tile.SAND, Tile.TREE, Tile.FOREST);
 			_generator.addGenerationLayer(fractalLayer);
 			
@@ -74,6 +74,20 @@ package
 														  [0, 0, 0, 0, 0, 0, 0, 0]]);
 			beachLayer.setModel(beachModel, Tile.WATER);
 			_generator.addGenerationLayer(beachLayer);
+			
+				//Laker Layer
+			var lakeLayer:MarkovGenerationLayer = new MarkovGenerationLayer();
+			lakeLayer.setMinMaxResolution(8, 8);        //w   d   g   s   t   f   l   b
+			var lakeModel:MarkovModel = new MarkovModel([[1,  0,  0,  0,  0,  0,  0,  0],    // water 
+														 [0,  2,  0,  0,  0,  0,  0,  0],    // dirt
+														 [0,  0,  2,  0,  0,  0,  0,  0],    // grass
+														 [0,  0,  0,  1,  0,  0,  0,  0],    // sand
+														 [0,  0,  0,  0,  1,  0,  0,  0],    // tree
+														 [0,  0,  0,  0,  0,  1,  0,  0],    // forrest
+														 [0, .009, .009,  0, .009, .009,  5, .009],    // lake
+														 [0,  0,  0,  0,  0,  0,  0,  2]]);  //bush
+			lakeLayer.setModel(lakeModel, Tile.DIRT, Tile.GRASS, Tile.FOREST, Tile.TREE, Tile.BUSH, Tile.LAKE);
+			_generator.addGenerationLayer(lakeLayer);
 			
 			//Smoothing Layer
 			
@@ -114,7 +128,7 @@ package
 		private function generationFinished():void{		
 			for(var i:int = 0; i<70;i++){
 				var dino:Gallimimus = new Gallimimus();
-				addChild(dino);
+				//addChild(dino);
 			}
 		}
     }
