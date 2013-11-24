@@ -128,7 +128,7 @@ package
 		private function generationFinished():void{		
 			for(var i:int = 0; i<70;i++){
 				var dino:Gallimimus = new Gallimimus();
-				//addChild(dino);
+				addChild(dino);
 			}
 		}
     }
