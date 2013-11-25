@@ -12,10 +12,15 @@ public class Grass extends Tile
 	public static const GRASS_COLOR:Color = new Color(0.2, 1, 0.2);
 	public static const DIRT_COLOR:Color = new Color(0.5, 0.3, 0);
 	
+	private static const BEGIN_DELAY:int = 120;
+	private static const UPDATE_PERIOD:int = 60;
+	private static const EAT_UPDATE_PERIOD = 5;
+	
 	private var _growthPercent:Number;
 	private var _isEdible:Boolean;
 	private var _growRate:Number;
 	
+	private var _beingEaten:Boolean = false;
 	
 	public function Grass(ediblePercent:Number, growRate:Number){
 		super();
@@ -43,6 +48,10 @@ public class Grass extends Tile
 		_growthPercent = Math.max(0, _growthPercent - EAT_RATE);
 		_isEdible = (_growthPercent > 0);
 		
+		_beingEaten = true;
+		if(_plannedUpdates == 0){
+			requestUpdate(EAT_UPDATE_PERIOD);
+		}
 	}
 	
 	private function grow():void {
@@ -51,18 +60,25 @@ public class Grass extends Tile
 		if(_growthPercent >= 1){
 			_growthPercent = 1;
 		}else{
-			tilemap.requestUpdate(this, 60);
+			requestUpdate(UPDATE_PERIOD);
 		}
 	}
 	
 	public override function onAddToTileMap():void{
 		if(_growthPercent < 1  &&  _growRate > 0){
-			tilemap.requestUpdate(this, (int)(Math.random()*120 + 1));
+			requestUpdate((int)(Math.random()*BEGIN_DELAY + 1));
 		}
 	}
 	
 	public override function onUpdate():void {
-		grow();
+		super.onUpdate();
+		
+		if(_beingEaten){
+			_beingEaten = false;
+			requestUpdate(EAT_UPDATE_PERIOD);
+		}else{
+			grow();
+		}
 	}
 }
 }

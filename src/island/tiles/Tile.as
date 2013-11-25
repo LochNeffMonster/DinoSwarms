@@ -16,6 +16,8 @@ public class Tile{
 	public var x:int, y:int;
 	public var tilemap:TileMap;
 	
+	protected var _plannedUpdates:int = 0;
+	
 	public function Tile(){
 		super();
 	}
@@ -47,6 +49,12 @@ public class Tile{
 	 * an update.  
 	 */
 	public function onUpdate():void {
+		_plannedUpdates--;
+	}
+	
+	protected function requestUpdate(frames:int):void{
+		tilemap.requestUpdate(this, frames);
+		_plannedUpdates++;
 	}
 	
 	/**
