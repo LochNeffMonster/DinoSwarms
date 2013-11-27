@@ -12,7 +12,6 @@ import events.TileEvent;
 
 import island.tiles.Grass;
 import island.tiles.Tile;
-import island.tiles.Water;
 
 public class TileMap extends Sprite
 {
