@@ -30,9 +30,16 @@ public class Grass extends Tile{
 	public function Grass(ediblePercent:Number, growRate:Number){
 		super();
 		_traversable = true;
-		updateGrowth(ediblePercent);
+		_growthPercent = ediblePercent;
 		_isEdible = (ediblePercent > EDIBLE_PERCENT);
 		_growRate = growRate;
+	}
+	
+	public override function onAddToTileMap():void{
+		if(_growthPercent < 1  &&  _growRate > 0){
+			requestUpdate((int)(Math.random()*BEGIN_DELAY + 1));
+		}
+		initGrassGrowth(_growthPercent);
 	}
 	
 	public override function getColor():uint {
@@ -54,12 +61,6 @@ public class Grass extends Tile{
 		_beingEaten = true;
 		if(_plannedUpdates == 0){
 			requestUpdate(EAT_UPDATE_PERIOD);
-		}
-	}
-	
-	public override function onAddToTileMap():void{
-		if(_growthPercent < 1  &&  _growRate > 0){
-			requestUpdate((int)(Math.random()*BEGIN_DELAY + 1));
 		}
 	}
 	
@@ -93,6 +94,11 @@ public class Grass extends Tile{
 		var growthIndexY:int = y / GROWTH_RES;
 		_growthMap[growthIndexX][growthIndexY] += (toGrowth - _growthPercent) / (GROWTH_RES*GROWTH_RES);
 		_growthPercent = toGrowth;
+	}
+	
+	private function initGrassGrowth(initGrowth:Number):void{
+		updateGrowth(initGrowth + _growthPercent);
+		_growthPercent = initGrowth;
 	}
 	
 	private static function initGrowthMap():void{
