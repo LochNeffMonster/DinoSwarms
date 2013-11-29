@@ -10,7 +10,10 @@ public class Tile{
 	public static var GRASS:int = 2;
 	public static var SAND:int = 3;
 	public static var TREE:int = 4;
-	public static var NUM_TILES:int = 5;
+	public static var FOREST:int = 5;
+	public static var LAKE:int = 6;
+	public static var BUSH:int = 7;
+	public static var NUM_TILES:int = 8;
 	
 	protected var _traversable:Boolean;
 	public var x:int, y:int;
@@ -76,6 +79,10 @@ public class Tile{
 		switch (type){
 			case Tile.WATER:
 				return new Water();
+			case Tile.LAKE:
+				return new Water();
+			case Tile.BUSH:
+				return new Bush();
 			case Tile.DIRT:
 				return new Grass(0, 0);
 			case Tile.GRASS:
@@ -84,6 +91,8 @@ public class Tile{
 				return new Sand();
 			case Tile.TREE:
 				return new Tree();
+			case Tile.FOREST:
+				return new Grass(0, 0);
 			default:
 				throw new IllegalOperationError();
 		}	
@@ -98,14 +107,20 @@ public class Tile{
 		switch (type){
 			case Tile.WATER:
 				return Water.WATER_COLOR.color;
+			case Tile.LAKE:
+				return 0x99e4d1;
 			case Tile.DIRT:
 				return Grass.DIRT_COLOR.color;
+			case Tile.BUSH:
+				return Bush.BUSH_COLOR.color;
 			case Tile.GRASS:
 				return Grass.GRASS_COLOR.color;
 			case Tile.SAND:
 				return Sand.SAND_COLOR.color;
 			case Tile.TREE:
 				return Tree.TREE_COLOR.color;
+			case Tile.FOREST:
+				return 0xff0000;
 			default:
 				throw new IllegalOperationError();
 		}	

@@ -72,8 +72,8 @@ package dinosaurs
 						trace((currentTile as Grass).IsEdible);
 						return !(currentTile as Grass).IsEdible;
 					}
-
-			};
+					return false;
+				};
 			_stateMachine.transitions.push(eatTransition);
 
         }
