@@ -86,5 +86,16 @@ package dinosaurs
 				actions[a]();
 			}
 		}
+        
+        public function destroy():void {
+            //TileMap.CurrentMap.addChild(this);
+            trace(this);
+            parent.removeChild(this);
+            for(var i:int in DinoSwarms.galHolder){
+                if(DinoSwarms.galHolder[i] == this){
+                    DinoSwarms.galHolder.splice(i,1);
+                }
+            }
+        }
 	}
 }

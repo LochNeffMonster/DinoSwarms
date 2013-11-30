@@ -135,12 +135,12 @@ package
 			// 		using the list of grass tiles, randomly place the dinos
 			var grassArray:Array = _tileMap.getTilesFromClass(Grass);
             var randomIndex:int;
-			for(var i:int = 0; i<20;i++){
+			for(var i:int = 0; i<15;i++){
 				var dino:Gallimimus = new Gallimimus();
 				randomIndex = Math.floor(Math.random()*grassArray.length);
 				dino.x = (grassArray[randomIndex]).x;
 				dino.y = (grassArray[randomIndex]).y;
-				addChild(dino);
+				TileMap.CurrentMap.addChild(dino);
                 galHolder.push(dino);
 			}
             
@@ -149,7 +149,7 @@ package
                 randomIndex = Math.floor(Math.random()*grassArray.length);
                 trex.x = (grassArray[randomIndex]).x;
                 trex.y = (grassArray[randomIndex]).y;
-                addChild(trex);
+                TileMap.CurrentMap.addChild(trex);
                 trexHolder.push(trex);
             }
 		}

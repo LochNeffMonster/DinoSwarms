@@ -32,7 +32,7 @@ package dinosaurs
             _dirtCost = 1;
             _grassCost = 2;
             _sandCost = 3;
-            _eatRate = Math.random()*.015;
+            _eatRate = Math.random()*.1;
             _dinoDistance = 20;
             _carnivore = true;
             
@@ -56,6 +56,9 @@ package dinosaurs
             var beginToEat:ITransition = new Transition();
             beginToEat.condition = function():Boolean {
                 if(_targetGallimimus.x == x && _targetGallimimus.y == y){
+                    //_targetGallimimus.parent.removeChild(_targetGallimimus);
+                    _targetGallimimus.destroy();
+                    _targetGallimimus = null;
                     _currentCorpse = new Corpse();
                     _currentCorpse.x = x;
                     _currentCorpse.y = y;
@@ -93,6 +96,7 @@ package dinosaurs
                     _targetGallimimus = g;
                 }
             }
+            if(_targetGallimimus) trace("SEEN GALLIMIMUS - TRANSITIONING");
             
             return (_targetGallimimus);
         }

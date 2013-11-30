@@ -35,12 +35,19 @@ package dinosaurs
 			super();
 			_energy = 70;
 			addEventListener(Event.ADDED_TO_STAGE, init);
+            addEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
 			//targetPoint = new Point();
 		}
 		
 		private function init(e:Event):void {
+            removeEventListener(Event.ADDED_TO_STAGE, init);
 			addEventListener(Event.ENTER_FRAME, onUpdate);
 		}
+        
+        protected function onRemoved(e:Event):void {
+            removeEventListener(Event.ENTER_FRAME, onUpdate);
+            removeEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
+        }
 		
 		protected function onUpdate(e:Event):void {
 			

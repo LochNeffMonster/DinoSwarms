@@ -47,9 +47,20 @@ package dinosaurs.behaviors
                     _gallimimusPoint = new Point(tg.x,tg.y);
                     _dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
                 }else if(_gallimimusPoint.x != tg.x || _gallimimusPoint.y != tg.y){
-                    var tempPath:Array = AStar.CurrentAStar.GeneratePath(_dinosaur.currentPath[_dinosaur.currentPath.length-1].x,_dinosaur.currentPath[_dinosaur.currentPath.length-1].y
-                        ,tg.x,tg.y,_dinosaur);
-                    _dinosaur.currentPath.concat(tempPath);
+                    _gallimimusPoint.x = tg.x;
+                    _gallimimusPoint.y = tg.y;
+                    var tempPath:Array;
+                    if(_dinosaur.currentPath.length > 0){
+                        tempPath = AStar.CurrentAStar.GeneratePath(_dinosaur.currentPath[_dinosaur.currentPath.length-1].x,_dinosaur.currentPath[_dinosaur.currentPath.length-1].y
+                            ,tg.x,tg.y,_dinosaur);
+                    }else{
+                        tempPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
+                    }
+                    if(tempPath){
+                        while(tempPath.length != 0){
+                            _dinosaur.currentPath.push(tempPath.shift());
+                        }
+                    }
                 }else if(_dinosaur.currentPath.length == 0){
                     dx = Math.abs(tg.x - _dinosaur.x);
                     dy = Math.abs(tg.y - _dinosaur.y);
@@ -67,6 +78,13 @@ package dinosaurs.behaviors
                     _dinosaur.currentPath.pop();
                 }
                 _dinosaur.targetPoint = _dinosaur.currentPath.pop();
+            }else{
+                trace("HEY IM BEING CALLED YOU FUCKING ASSHOLE");
+                dx = (_dinosaur.targetPoint.x - _dinosaur.x);
+                dy = (_dinosaur.targetPoint.y - _dinosaur.y);
+                distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
+                _dinosaur.x += (dx/distance)*_dinosaur.Speed;
+                _dinosaur.y += (dy/distance)*_dinosaur.Speed;
             }
         }
     }

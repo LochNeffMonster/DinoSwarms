@@ -12,7 +12,7 @@ package dinosaurs.behaviors
         
         public function eat():void {
             (_dinosaur as TRex).CurrentCorpse.percentEaten += _dinosaur.EatRate;
-            trace("IM EATING BITCH MAGNETS");
+            trace("Eating: " + (_dinosaur as TRex).CurrentCorpse.percentEaten);
         }
     }
 }
