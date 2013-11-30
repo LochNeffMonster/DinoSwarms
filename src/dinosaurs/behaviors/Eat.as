@@ -17,8 +17,8 @@ package dinosaurs.behaviors
         
         public function eat():void {
             //eat shit fucking god damn
-			TileMap.CurrentMap.dispatchEvent(new TileEvent(TileEvent.EAT_GRASS,_dino.x , _dino.y) );
-			trace("om nom nom nom nom nom");
+			TileMap.CurrentMap.dispatchEvent(new TileEvent(TileEvent.EAT_GRASS,_dino.x , _dino.y, false, false, _dino) );
+			//trace("om nom nom nom nom nom");
         }
     }
 }

@@ -8,6 +8,8 @@ import flash.utils.Dictionary;
 import flash.utils.getDefinitionByName;
 import flash.utils.getQualifiedClassName;
 
+import dinosaurs.Dinosaur;
+
 import events.TileEvent;
 
 import island.tiles.Grass;
@@ -230,7 +232,8 @@ public class TileMap extends Sprite
 			trace("I can't eat that"+currentTile);
 			return;
 		}
-		(currentTile as Grass).onEatGrass();
+        
+		(currentTile as Grass).onEatGrass(e.Data);
 	}
 }
 }

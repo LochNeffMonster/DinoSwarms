@@ -49,7 +49,6 @@ package dinosaurs.Engines
 			}
 			_openList = [];
 			_end = new Point(endX,endY);
-			trace("STARTING X: " + startX);
 			_start = new Node(startX, startY, null, 0, GenerateHeuristic(startX, startY), 1);
 			_currentNode = _start;
 			//start at position 1 to make later math easier
@@ -101,7 +100,6 @@ package dinosaurs.Engines
 								else
 								{
 									AddOpenList(tempNode);
-									//trace("added Nodes");
 									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
 								}
 							}
@@ -111,7 +109,6 @@ package dinosaurs.Engines
 						else
 						{
 							AddOpenList(tempNode);
-							//trace("added Nodes:");
 							_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
 						}
 					}
@@ -125,13 +122,11 @@ package dinosaurs.Engines
 			}
 			if ((_Pos.x - _end.x < -1 || _Pos.x - _end.x > 1) || (_Pos.y - _end.y < -1 || _Pos.y - _end.y > 1))
 			{
-				trace("DIDN't find gaol");
 				return null;
 			}
 				
 			else
 			{
-				trace("ffffffffffffffffooooooooooooooooooooND IT")
 				var returnList:Array = [];
 				returnList[0] = _currentNode.Coordinate;
 				while (_currentNode != _start)

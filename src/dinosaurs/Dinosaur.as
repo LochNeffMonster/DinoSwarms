@@ -18,13 +18,17 @@ package dinosaurs
 		protected var _energy:Number;
 		protected var _stateMachine:StateMachine;
 		protected var _speed:int;
+        protected var _eatRate:Number;
 		
 		protected var _dirtCost:int;
 		protected var _grassCost:int;
 		protected var _sandCost:int;
+        protected var _dinoDistance:int;
 		
 		public var targetPoint:Point;
 		public var currentPath:Array;
+        public var goalTile:Tile;
+        public var shuffledGrass:Array;
 		
 		public function Dinosaur()
 		{
@@ -61,5 +65,12 @@ package dinosaurs
 			}
 			return 2;
 		}
+        public function get EatRate():Number{
+            return _eatRate;
+        }
+        
+        public function get DinoVisionDistance():int {
+            return _dinoDistance;
+        }
 	}
 }
