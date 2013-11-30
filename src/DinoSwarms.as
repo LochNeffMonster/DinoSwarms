@@ -11,11 +11,13 @@ package
     import island.generation.layers.DirtBaseGenerationLayer;
     import island.generation.layers.MarkovGenerationLayer;
     import island.generation.layers.SmoothingLayer;
+    import island.tiles.Grass;
     import island.tiles.Tile;
     
     public class DinoSwarms extends Sprite{
         private var _tileMap:TileMap;
 		private var _generator:LevelGeneration;
+		private var _acceptableGrowthLevel:Number = 0.8;
         
         public function DinoSwarms(){
 			initGenerator();
@@ -124,9 +126,16 @@ package
 			}
 		}
 		
-		private function generationFinished():void{		
-			for(var i:int = 0; i<70;i++){
+		private function generationFinished():void{
+			// Search for a fertile place to put the dinos
+			// 		using the list of grass tiles, randomly place the dinos
+			var grassArray:Array = _tileMap.getTilesFromClass(Grass);
+					
+			for(var i:int = 0; i<1;i++){
 				var dino:Gallimimus = new Gallimimus();
+				var randomIndex:int = Math.floor(Math.random()*grassArray.length);
+				dino.x = (grassArray[randomIndex]).x;
+				dino.y = (grassArray[randomIndex]).y
 				addChild(dino);
 			}
 		}
