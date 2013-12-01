@@ -3,7 +3,7 @@ package dinosaurs.Engines
 	import flash.geom.Point;
 	
 	import island.tiles.Tile;
-
+	
 	public class Node
 	{
 		//coordinates
@@ -16,8 +16,7 @@ package dinosaurs.Engines
 		
 		public function Node(Xoor:Number, Yoor:Number, Connection:Point, CostSoFar:Number, Heuristic:Number, State:int)
 		{
-			_Coordinate.x = Xoor;
-			_Coordinate.y = Yoor;
+			_Coordinate = new Point(Xoor,Yoor);
 			_Connection = Connection;
 			_CostSoFar = CostSoFar;
 			_Heuristic = Heuristic;
@@ -56,3 +55,5 @@ package dinosaurs.Engines
 		}
 	}
 }
+import dinosaurs.Engines;
+

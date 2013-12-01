@@ -1,55 +1,56 @@
 package dinosaurs.behaviors
-{    
-	import flash.display.Sprite;
-	import flash.geom.Point;
-	
-	import dinosaurs.Dinosaur;
-	import dinosaurs.Engines.AStar;
-	
-	import island.TileMap;
-	import island.tiles.Grass;
-	import island.tiles.Tile;
-	
-	public class SearchForFood extends Behavior
-	{
-		private static const ACCEPTABLE_GROWTH:Number = 0.3;
+{
+    import flash.display.Sprite;
+    import flash.geom.Point;
+    
+    import dinosaurs.Dinosaur;
+    import dinosaurs.Engines.AStar;
+    
+    import island.TileMap;
+    import island.tiles.Grass;
+    import island.tiles.Tile;
+    
+    public class SearchForGallimimus extends Behavior
+    {
+        private static const ACCEPTABLE_GROWTH:Number = 0.3;
         
         private var targetPointSprite:Sprite;
-		
-		public function SearchForFood(dino:Dinosaur)
-		{
-			super(dino);
-		}
-		
-		public function search():void {
-			//search for grass to eat
-			var dx:Number;
-			var dy:Number;
-			var distance:Number;
+        
+        public function SearchForGallimimus(dino:Dinosaur)
+        {
+            super(dino);
+        }
+        
+        public function search():void {
+            var dx:Number;
+            var dy:Number;
+            var distance:Number;
+            
             if(!_dinosaur.shuffledGrass){
                 _dinosaur.shuffledGrass = Grass.shuffleGrass();
             }
-			
-			// if the dino has a target tile to get to
-			if(_dinosaur.targetPoint){
-				dx = Math.abs(_dinosaur.targetPoint.x - _dinosaur.x);
-				dy = Math.abs(_dinosaur.targetPoint.y - _dinosaur.y);
-				distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
-				if(distance <= _dinosaur.Speed){
-					_dinosaur.x = _dinosaur.targetPoint.x;
-					_dinosaur.y = _dinosaur.targetPoint.y;
-				}
-				var targetTile:Tile = TileMap.CurrentMap.getTileFromCoord(_dinosaur.targetPoint.x,_dinosaur.targetPoint.y);
-				var currentTile:Tile = TileMap.CurrentMap.getTileFromCoord(Math.floor(_dinosaur.x),Math.floor(_dinosaur.y));
-				// If the dino is at their target, then set null to clear for next food search
-				if(currentTile == targetTile) _dinosaur.targetPoint = null;
-			}
-			// if the dino doesn't currently have a target
-			if(!_dinosaur.targetPoint){
-				// while the dino doesn't have a path, or that they are at their target already
-				while(!_dinosaur.currentPath || _dinosaur.currentPath.length == 0){
-					var tmpPoint:Point = getNewPointInSector();
-					_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmpPoint.x,tmpPoint.y,_dinosaur);
+            
+            // if the dino has a target tile to get to
+            if(_dinosaur.targetPoint){
+                dx = Math.abs(_dinosaur.targetPoint.x - _dinosaur.x);
+                dy = Math.abs(_dinosaur.targetPoint.y - _dinosaur.y);
+                distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
+                if(distance <= _dinosaur.Speed){
+                    _dinosaur.x = _dinosaur.targetPoint.x;
+                    _dinosaur.y = _dinosaur.targetPoint.y;
+                }
+                var targetTile:Tile = TileMap.CurrentMap.getTileFromCoord(_dinosaur.targetPoint.x,_dinosaur.targetPoint.y);
+                var currentTile:Tile = TileMap.CurrentMap.getTileFromCoord(Math.floor(_dinosaur.x),Math.floor(_dinosaur.y));
+                // If the dino is at their target, then set null to clear for next food search
+                if(currentTile == targetTile) _dinosaur.targetPoint = null;
+            }
+            
+            // if the dino doesn't currently have a target
+            if(!_dinosaur.targetPoint){
+                // while the dino doesn't have a path, or that they are at their target already
+                while(!_dinosaur.currentPath || _dinosaur.currentPath.length == 0){
+                    var tmpPoint:Point = getNewPointInSector();
+                    _dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmpPoint.x,tmpPoint.y,_dinosaur);
                     if(_dinosaur.currentPath.length == 0){
                         for(var i:int in _dinosaur.shuffledGrass){
                             if(_dinosaur.goalTile == _dinosaur.shuffledGrass[i]){
@@ -58,7 +59,7 @@ package dinosaurs.behaviors
                             }
                         }
                     }
-				}
+                }
                 // make sure not to overshoot the goalTile
                 for(var j:int=0;j<_dinosaur.Speed-1;++j){
                     if(_dinosaur.currentPath.length == 1){
@@ -66,18 +67,19 @@ package dinosaurs.behaviors
                     }
                     _dinosaur.currentPath.pop();
                 }
-				_dinosaur.targetPoint = _dinosaur.currentPath.pop();
-			}else{
-				dx = (_dinosaur.targetPoint.x - _dinosaur.x);
-				dy = (_dinosaur.targetPoint.y - _dinosaur.y);
-				distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
-				_dinosaur.x += (dx/distance)*_dinosaur.Speed;
-				_dinosaur.y += (dy/distance)*_dinosaur.Speed;
-			}
-		}
+                _dinosaur.targetPoint = _dinosaur.currentPath.pop();
+            }else{
+                trace("HEY IM BEING CALLED YOU FUCKING ASSHOLE");
+                dx = (_dinosaur.targetPoint.x - _dinosaur.x);
+                dy = (_dinosaur.targetPoint.y - _dinosaur.y);
+                distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
+                _dinosaur.x += (dx/distance)*_dinosaur.Speed;
+                _dinosaur.y += (dy/distance)*_dinosaur.Speed;
+            }
+        }
+        
         
         private function getNewPointInSector():Point {
-            
             var fallbackGrass:Grass;
             var minGrass:Grass;
             for(var i:int in _dinosaur.shuffledGrass){
@@ -123,6 +125,5 @@ package dinosaurs.behaviors
             }
             return false;
         }
-	}
+    }
 }
-

@@ -4,6 +4,7 @@ package
     import flash.events.Event;
     
     import dinosaurs.Gallimimus;
+    import dinosaurs.TRex;
     
     import island.TileMap;
     import island.generation.LevelGeneration;
@@ -11,11 +12,16 @@ package
     import island.generation.layers.DirtBaseGenerationLayer;
     import island.generation.layers.MarkovGenerationLayer;
     import island.generation.layers.SmoothingLayer;
+    import island.tiles.Grass;
     import island.tiles.Tile;
     
     public class DinoSwarms extends Sprite{
         private var _tileMap:TileMap;
 		private var _generator:LevelGeneration;
+		private var _acceptableGrowthLevel:Number = 0.8;
+        
+        public static var galHolder:Array = [];
+        public static var trexHolder:Array = [];
         
         public function DinoSwarms(){
 			initGenerator();
@@ -124,11 +130,28 @@ package
 			}
 		}
 		
-		private function generationFinished():void{		
-			for(var i:int = 0; i<70;i++){
+		private function generationFinished():void{
+			// Search for a fertile place to put the dinos
+			// 		using the list of grass tiles, randomly place the dinos
+			var grassArray:Array = _tileMap.getTilesFromClass(Grass);
+            var randomIndex:int;
+			for(var i:int = 0; i<15;i++){
 				var dino:Gallimimus = new Gallimimus();
-				addChild(dino);
+				randomIndex = Math.floor(Math.random()*grassArray.length);
+				dino.x = (grassArray[randomIndex]).x;
+				dino.y = (grassArray[randomIndex]).y;
+				TileMap.CurrentMap.addChild(dino);
+                galHolder.push(dino);
 			}
+            
+            for(var j:int = 0; j<1;++j){
+                var trex:TRex = new TRex();
+                randomIndex = Math.floor(Math.random()*grassArray.length);
+                trex.x = (grassArray[randomIndex]).x;
+                trex.y = (grassArray[randomIndex]).y;
+                TileMap.CurrentMap.addChild(trex);
+                trexHolder.push(trex);
+            }
 		}
     }
 }

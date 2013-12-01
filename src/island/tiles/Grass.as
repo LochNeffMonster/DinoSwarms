@@ -1,6 +1,8 @@
 package island.tiles
 {
 
+import dinosaurs.Dinosaur;
+
 import island.TileMap;
 
 import util.Color;
@@ -54,8 +56,8 @@ public class Grass extends Tile{
 		return _isEdible;
 	}
 	
-	public function onEatGrass():void {
-		updateGrowth(Math.max(0, _growthPercent - EAT_RATE));
+	public function onEatGrass(d:Dinosaur):void {
+		updateGrowth(Math.max(0, _growthPercent - d.EatRate));
 		_isEdible = (_growthPercent > 0);
 		
 		_beingEaten = true;
@@ -74,6 +76,25 @@ public class Grass extends Tile{
 			grow();
 		}
 	}
+    
+    public static function shuffleGrass():Array{
+        var ary:Array = TileMap.CurrentMap.getTilesFromClass(Grass);
+        var capy:Array = [];
+        for(var j:int in ary){
+            if(ary[j].IsEdible){
+                capy.push(ary[j]);  
+            }     
+        }
+        var shuffled:Array = new Array(capy.length);
+        var randomPos:Number = 0;
+        for (var i:int = 0; i < shuffled.length; i++) //use shuffledLetters.length because splice() will change letters.length
+        {
+            randomPos = int(Math.random() * capy.length);
+            shuffled[i] = capy[randomPos];    //note this the other way around to the naive approach
+            capy.splice(randomPos, 1);
+        }
+        return shuffled;
+    }
 	
 	public static function getGrowthPercent(sectorX:int, sectorY:int):Number{
 		return _growthMap[sectorX][sectorY];
