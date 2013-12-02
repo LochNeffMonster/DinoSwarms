@@ -42,5 +42,7 @@ package FiniteStateMachine
 		 * @param trans the transitions
 		 */
 		function set transitions(type:Array):void;
+		
+		function get name():String;
 	}
 }
