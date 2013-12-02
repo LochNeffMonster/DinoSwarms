@@ -5,16 +5,20 @@ package dinosaurs.behaviors
 	
 	import dinosaurs.Dinosaur;
 	import dinosaurs.Engines.AStar;
+	import dinosaurs.Engines.VectorEngine;
 	
 	import island.TileMap;
 	import island.tiles.Grass;
 	import island.tiles.Tile;
+	
 	
 	public class SearchForFood extends Behavior
 	{
 		private static const ACCEPTABLE_GROWTH:Number = 0.3;
         
         private var targetPointSprite:Sprite;
+		private var tick:int = 0;
+		private var range:Number = 10;
 		
 		public function SearchForFood(dino:Dinosaur)
 		{
@@ -30,6 +34,8 @@ package dinosaurs.behaviors
                 _dinosaur.shuffledGrass = Grass.shuffleGrass();
             }
 			
+			tick += 1;
+			
 			// if the dino has a target tile to get to
 			if(_dinosaur.targetPoint){
 				dx = Math.abs(_dinosaur.targetPoint.x - _dinosaur.x);
@@ -44,6 +50,23 @@ package dinosaurs.behaviors
 				// If the dino is at their target, then set null to clear for next food search
 				if(currentTile == targetTile) _dinosaur.targetPoint = null;
 			}
+			
+			//used to avoid collisions with other gali
+			if (tick >= 120 && _dinosaur.currentPath.length != 0)
+			{
+				var tmp:Vector.<Point> = VectorEngine.CurrentVectorEngine.ScatterTurkeys(new Point(_dinosaur.x, _dinosaur.y), range);
+				if (tmp[0] != tmp[1]) {
+					var tmpPath:Array = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmp[1].x, tmp[1].y, _dinosaur);
+					if (tmpPath.length != 0){
+						_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(
+							tmp[1].x,tmp[1].y,_dinosaur.currentPath[0].x,_dinosaur.currentPath[0].y,_dinosaur);
+						_dinosaur.currentPath = tmpPath.concat(_dinosaur.currentPath);
+						_dinosaur.targetPoint = _dinosaur.currentPath.pop();
+					}
+				}
+				tick = 0;
+			}
+			
 			// if the dino doesn't currently have a target
 			if(!_dinosaur.targetPoint){
 				// while the dino doesn't have a path, or that they are at their target already
@@ -59,13 +82,13 @@ package dinosaurs.behaviors
                         }
                     }
 				}
-                // make sure not to overshoot the goalTile
-                for(var j:int=0;j<_dinosaur.Speed-1;++j){
-                    if(_dinosaur.currentPath.length == 1){
-                        break;
-                    }
-                    _dinosaur.currentPath.pop();
-                }
+				//make sure to overshoot the goalTile
+				for(var j:int=0;j<_dinosaur.Speed-1;++j){
+					if(_dinosaur.currentPath.length == 1){
+						break;
+					}
+					_dinosaur.currentPath.pop();
+				}
 				_dinosaur.targetPoint = _dinosaur.currentPath.pop();
 			}else{
 				dx = (_dinosaur.targetPoint.x - _dinosaur.x);
@@ -107,7 +130,7 @@ package dinosaurs.behaviors
             }
             targetPointSprite = new Sprite();
             targetPointSprite.graphics.beginFill(0x000000);
-            targetPointSprite.graphics.drawRect(0,0,3,3);
+            targetPointSprite.graphics.drawRect(0,0,1,1);
             targetPointSprite.graphics.endFill();
             targetPointSprite.x = minGrass.x;
             targetPointSprite.y = minGrass.y;

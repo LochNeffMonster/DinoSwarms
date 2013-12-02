@@ -1,39 +1,5 @@
 package dinosaurs
 {
-<<<<<<< HEAD
-    import flash.display.Sprite;
-    import flash.events.Event;
-    import flash.geom.Point;
-    
-    import FiniteStateMachine.StateMachine;
-    
-    import island.tiles.Grass;
-    import island.tiles.Sand;
-    import island.tiles.Tile;
-    
-    public class Dinosaur extends Sprite
-    {
-        public static const MAX_ENERGY:Number = 100;
-        
-        protected var _carnivore:Boolean;
-        protected var _energy:Number;
-        protected var _stateMachine:StateMachine;
-        protected var _speed:int;
-		
-		protected var _dirtCost:int;
-		protected var _grassCost:int;
-		protected var _sandCost:int;
-        
-        public var targetPoint:Point;
-		public var currentPath:Array;
-        
-        public function Dinosaur()
-        {
-            super();
-            _energy = 70;
-            addEventListener(Event.ADDED_TO_STAGE, init);
-            //targetPoint = new Point();
-=======
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.geom.Point;
@@ -58,6 +24,9 @@ package dinosaurs
 		protected var _grassCost:int;
 		protected var _sandCost:int;
         protected var _dinoDistance:int;
+		//used for flocking behaviors
+		protected var visionRange:Point;
+		protected var leader:Dinosaur;
 		
 		public var targetPoint:Point;
 		public var currentPath:Array;
@@ -113,5 +82,10 @@ package dinosaurs
         public function get DinoVisionDistance():int {
             return _dinoDistance;
         }
+		
+		public function get Leader():Dinosaur{
+			return leader;
+		}
+
 	}
 }

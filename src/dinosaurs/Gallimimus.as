@@ -1,12 +1,14 @@
 package dinosaurs
 {
 	import flash.events.Event;
+	import flash.geom.Point;
 	
 	import FiniteStateMachine.State;
 	import FiniteStateMachine.StateMachine;
 	import FiniteStateMachine.Transition;
 	
 	import dinosaurs.behaviors.Eat;
+	import dinosaurs.behaviors.Flock;
 	import dinosaurs.behaviors.SearchForFood;
 	
 	import island.TileMap;
@@ -22,15 +24,21 @@ package dinosaurs
 			_dirtCost = 1;
 			_grassCost = 2;
 			_sandCost = 3;
-            _eatRate = Math.random()*.015;
+            //_eatRate = Math.random()*.015 + .01;
+			_eatRate = 1;
 			graphics.beginFill(0xFF0000);
-			graphics.drawRect(0,0,TileMap.TILE_SIZE*5,TileMap.TILE_SIZE*5);
+			graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
 			graphics.endFill();
             _dinoDistance = 12;
 			
+			//for flocking
+			//first number is distance, second is angle range to either side.
+			visionRange = new Point(15, 45);
+			leader = this;
+			
 			_carnivore = false;
 			_stateMachine = new StateMachine();
-			//Search
+			//Search for food and eat initializations
 			var search:State = new State();
 			var eat:State = new State();
 			search.action = new SearchForFood(this).search;
@@ -78,6 +86,17 @@ package dinosaurs
 			};
             eat.transitions.push(eatTransition);
 			
+			//Flocking
+			var flock:State = new State();
+			flock.action = new Flock(this).FlockwLeader;
+			var transitionToFlock:Transition = new Transition();
+			transitionToFlock.targetState = flock;
+			transitionToFlock.condition = Check4Friends;
+			var transitionFromFlock:Transition = new Transition();
+			transitionFromFlock.targetState = search;
+			transitionFromFlock.condition = NoFlock;
+			search.transitions.push(transitionToFlock);
+			flock.transitions.push(transitionFromFlock);
 		}
 		
 		protected override function onUpdate(e:Event):void{
@@ -97,5 +116,45 @@ package dinosaurs
                 }
             }
         }
+		
+		public function Check4Friends():Boolean{
+			for each (var d:Dinosaur in DinoSwarms.galHolder)
+			{
+				var hypo:Number = Math.sqrt(Math.pow(d.x - this.x, 2) + Math.pow(d.y - this.y, 2));
+				if (hypo <= visionRange.x)
+				{
+					if (targetPoint != null){
+						var hypo2:Number = Math.sqrt(Math.pow(targetPoint.x - this.x, 2) + Math.pow(targetPoint.y - this.y, 2));
+						var hypo3:Number = Math.sqrt(Math.pow(d.x - targetPoint.x, 2) + Math.pow(d.y - targetPoint.y, 2));
+						var cosA:Number = ((Math.pow(hypo, 2) + Math.pow(hypo2, 2) - Math.pow(hypo3, 2))/ ( 2*hypo*hypo2));
+						if (Math.acos(cosA) <= 45)
+						{
+							//checks to make sure the leader is moving
+							if (d.currentPath && d.currentPath.length > 0)
+								leader = d.Leader;
+								if (leader = this)
+									return false;
+							return true;
+						}
+					}
+					else
+					{
+						leader = d.Leader;
+						return true;
+					}
+				}
+			}
+			return false;
+		}
+		
+		public function NoFlock():Boolean{
+			//if leader stops,then stop flocking
+			if (!Leader.currentPath || Leader.currentPath.length == 0)
+			{
+				leader = this;
+				return true;
+			}
+			return false;
+		}
 	}
 }
