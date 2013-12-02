@@ -31,10 +31,16 @@ package dinosaurs
 			_carnivore = false;
 			_stateMachine = new StateMachine();
 			//Search
-			var search:State = new State();
-			var eat:State = new State();
+			var search:State = new State("search");
+			//search.entryAction = _stateMachine.currentStateName();
+			var eat:State = new State("eat");
+			//eat.entryAction = _stateMachine.currentStateName();
 			search.action = new SearchForFood(this).search;
 			_stateMachine.currentState = search;
+			
+			search.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName); };
+			eat.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName); };
+			
 			var transitionToEat:Transition = new Transition();
 			transitionToEat.targetState = eat;
 			transitionToEat.condition = function():Boolean {
