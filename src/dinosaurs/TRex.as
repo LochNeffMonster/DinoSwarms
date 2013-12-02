@@ -32,7 +32,7 @@ package dinosaurs
             _dirtCost = 1;
             _grassCost = 2;
             _sandCost = 3;
-            _eatRate = Math.random()*.1;
+            _eatRate = Math.random()*.6;
             _dinoDistance = 20;
             _carnivore = true;
             
@@ -55,8 +55,12 @@ package dinosaurs
             hunt.action = new Hunt(this).huntForGallimimus;
             var beginToEat:ITransition = new Transition();
             beginToEat.condition = function():Boolean {
-                if(_targetGallimimus.x == x && _targetGallimimus.y == y){
-                    //_targetGallimimus.parent.removeChild(_targetGallimimus);
+				var dx:Number = Math.abs(_targetGallimimus.x - x);
+				var dy:Number = Math.abs(_targetGallimimus.y - y);
+				var distance:Number = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
+				if(distance <= Speed){
+					x = _targetGallimimus.x;
+					y = _targetGallimimus.y;
                     _targetGallimimus.destroy();
                     _targetGallimimus = null;
                     _currentCorpse = new Corpse();

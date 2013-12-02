@@ -1,5 +1,6 @@
 package dinosaurs.behaviors
 {
+    import flash.display.Sprite;
     import flash.geom.Point;
     
     import dinosaurs.Dinosaur;
@@ -13,6 +14,7 @@ package dinosaurs.behaviors
     public class Hunt extends Behavior
     {
         private var _gallimimusPoint:Point;
+		private var huntPathViz:Sprite;
         
         public function Hunt(dino:Dinosaur)
         {
@@ -23,7 +25,7 @@ package dinosaurs.behaviors
             var dx:Number;
             var dy:Number;
             var distance:Number;
-            
+			
             // if the dino has a target tile to get to
             if(_dinosaur.targetPoint){
                 dx = Math.abs(_dinosaur.targetPoint.x - _dinosaur.x);
@@ -43,10 +45,13 @@ package dinosaurs.behaviors
             if(!_dinosaur.targetPoint){
                 // while the dino doesn't have a path, or that they are at their target already
                 var tg:Gallimimus = (_dinosaur as TRex).TargetGallimimus;
+				_gallimimusPoint = new Point(tg.x,tg.y);
+				_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
                 if(!_dinosaur.currentPath){
                     _gallimimusPoint = new Point(tg.x,tg.y);
                     _dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
                 }else if(_gallimimusPoint.x != tg.x || _gallimimusPoint.y != tg.y){
+					/*TileMap.CurrentMap.addChild(huntPathViz);
                     _gallimimusPoint.x = tg.x;
                     _gallimimusPoint.y = tg.y;
                     var tempPath:Array;
@@ -58,9 +63,9 @@ package dinosaurs.behaviors
                     }
                     if(tempPath){
                         while(tempPath.length != 0){
-                            _dinosaur.currentPath.push(tempPath.shift());
+                            _dinosaur.currentPath.splice(tempPath.pop(), 0);
                         }
-                    }
+                    }*/
                 }else if(_dinosaur.currentPath.length == 0){
                     dx = Math.abs(tg.x - _dinosaur.x);
                     dy = Math.abs(tg.y - _dinosaur.y);
@@ -79,13 +84,28 @@ package dinosaurs.behaviors
                 }
                 _dinosaur.targetPoint = _dinosaur.currentPath.pop();
             }else{
-                trace("HEY IM BEING CALLED YOU FUCKING ASSHOLE");
+                //trace("HEY IM BEING CALLED YOU FUCKING ASSHOLE");
                 dx = (_dinosaur.targetPoint.x - _dinosaur.x);
                 dy = (_dinosaur.targetPoint.y - _dinosaur.y);
                 distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
                 _dinosaur.x += (dx/distance)*_dinosaur.Speed;
                 _dinosaur.y += (dy/distance)*_dinosaur.Speed;
             }
+			
+			if(_dinosaur.currentPath){
+				if(huntPathViz){
+					TileMap.CurrentMap.removeChild(huntPathViz);
+					huntPathViz = null;
+				}
+				huntPathViz = new Sprite();
+				huntPathViz.graphics.beginFill(0xFFFFFF);
+				for(var i:int in _dinosaur.currentPath){
+					trace(i);
+					huntPathViz.graphics.drawRect(_dinosaur.currentPath[i].x, _dinosaur.currentPath[i].y,TileMap.TILE_SIZE,TileMap.TILE_SIZE);
+				}
+				huntPathViz.graphics.endFill();
+				TileMap.CurrentMap.addChild(huntPathViz);
+			}
         }
     }
 }

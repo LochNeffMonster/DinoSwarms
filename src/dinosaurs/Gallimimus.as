@@ -22,7 +22,7 @@ package dinosaurs
 			_dirtCost = 1;
 			_grassCost = 2;
 			_sandCost = 3;
-            _eatRate = Math.random()*.015;
+            _eatRate = Math.random()*.15;
 			graphics.beginFill(0xFF0000);
 			graphics.drawRect(0,0,TileMap.TILE_SIZE*5,TileMap.TILE_SIZE*5);
 			graphics.endFill();
