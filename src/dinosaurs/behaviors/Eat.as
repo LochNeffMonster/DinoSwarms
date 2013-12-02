@@ -5,19 +5,17 @@ package dinosaurs.behaviors
     import events.TileEvent;
     
     public class Eat extends Behavior
-    {
-		private var _dino:Dinosaur;
-		
+    {		
         public function Eat(dino:Dinosaur)
         {
 			
             super(dino);
-			_dino = dino;
 		}
         
         public function eat():void {
             //eat shit fucking god damn
-			TileMap.CurrentMap.dispatchEvent(new TileEvent(TileEvent.EAT_GRASS,_dino.x , _dino.y, false, false, _dino) );
+			TileMap.CurrentMap.dispatchEvent(new TileEvent(TileEvent.EAT_GRASS,_dinosaur.x , _dinosaur.y, false, false, _dinosaur) );
+			_dinosaur.energy += 0.5;
 			//trace("om nom nom nom nom nom");
         }
     }

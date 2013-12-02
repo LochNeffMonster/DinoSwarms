@@ -43,9 +43,6 @@ package dinosaurs.Engines
 		{
 			//setting variables and current node
 			_dino = dino;
-			//_nodePos = []; //quick Node pos look up
-			//_allNodes = []; //quick Node look up
-			var count:int = 0;
 			for(var i:int = 0; i<TileMap.WIDTH; ++i){
 				for(var j:int = 0; j<TileMap.HEIGHT; ++j){
 					_nodePos[i][j] = 0;

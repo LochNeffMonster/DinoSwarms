@@ -50,6 +50,9 @@ package dinosaurs.behaviors
                 if(!_dinosaur.currentPath){
                     _gallimimusPoint = new Point(tg.x,tg.y);
                     _dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
+					if(!_dinosaur.currentPath){
+						trace("bacon");
+					}
                 }else if(_gallimimusPoint.x != tg.x || _gallimimusPoint.y != tg.y){
 					/*TileMap.CurrentMap.addChild(huntPathViz);
                     _gallimimusPoint.x = tg.x;

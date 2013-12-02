@@ -1,6 +1,7 @@
 package dinosaurs
 {
     import flash.events.Event;
+    import flash.utils.Dictionary;
     
     import FiniteStateMachine.ITransition;
     import FiniteStateMachine.State;
@@ -20,6 +21,8 @@ package dinosaurs
         private var checkGallimimusTimer:int = 0;
         private var _targetGallimimus:Gallimimus;
         private var _currentCorpse:Corpse;
+		
+		public var checkedSectors:Dictionary = new Dictionary();
         
         public function TRex()
         {
@@ -28,7 +31,7 @@ package dinosaurs
             graphics.beginFill(0xFF00FF);
             graphics.drawRect(0,0,TileMap.TILE_SIZE*5,TileMap.TILE_SIZE*5);
             graphics.endFill();
-            _speed = 3;
+            _speed = 2;
             _dirtCost = 1;
             _grassCost = 2;
             _sandCost = 3;
@@ -44,7 +47,11 @@ package dinosaurs
             search.action = new SearchForGallimimus(this).search;
             var searchToHuntTransition:ITransition = new Transition();
             searchToHuntTransition.condition = function():Boolean {
-                if(currentPath.length == 0 || --checkGallimimusTimer <= 0){
+				if(!currentPath){
+					checkGallimimusTimer = GAL_TIMER;
+					return checkIfGallimimusInRange();
+				}else if(currentPath.length == 0 || --checkGallimimusTimer <= 0){
+					checkGallimimusTimer = GAL_TIMER;
                     currentPath = null;
                     return checkIfGallimimusInRange();
                 }
@@ -80,6 +87,8 @@ package dinosaurs
                 if(_currentCorpse.percentEaten >= 1){
                     TileMap.CurrentMap.removeChild(_currentCorpse);
                     _currentCorpse = null;
+					trace("TRANSITIONING TO SEARCH");
+					checkedSectors = new Dictionary();
                     return true;
                 }
                 return false;

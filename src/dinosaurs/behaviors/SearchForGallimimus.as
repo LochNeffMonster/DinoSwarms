@@ -2,8 +2,10 @@ package dinosaurs.behaviors
 {
     import flash.display.Sprite;
     import flash.geom.Point;
+    import flash.utils.Dictionary;
     
     import dinosaurs.Dinosaur;
+    import dinosaurs.TRex;
     import dinosaurs.Engines.AStar;
     
     import island.TileMap;
@@ -51,14 +53,6 @@ package dinosaurs.behaviors
                 while(!_dinosaur.currentPath || _dinosaur.currentPath.length == 0){
                     var tmpPoint:Point = getNewPointInSector();
                     _dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmpPoint.x,tmpPoint.y,_dinosaur);
-                    if(_dinosaur.currentPath.length == 0){
-                        for(var i:int in _dinosaur.shuffledGrass){
-                            if(_dinosaur.goalTile == _dinosaur.shuffledGrass[i]){
-                                _dinosaur.shuffledGrass.splice(i,1);
-                                break;
-                            }
-                        }
-                    }
                 }
                 // make sure not to overshoot the goalTile
                 for(var j:int=0;j<_dinosaur.Speed-1;++j){
@@ -80,27 +74,37 @@ package dinosaurs.behaviors
         
         
         private function getNewPointInSector():Point {
+			trace("GET NEW POINT BECAUSE PATH IS FINISHED");
             var fallbackGrass:Grass;
             var minGrass:Grass;
-            for(var i:int in _dinosaur.shuffledGrass){
-                var g:Grass = _dinosaur.shuffledGrass[i];
-                var bacon:Array = _dinosaur.shuffledGrass;
+			var grass:Array = getAdjacentSectorsOfGrass();
+            for(var i:int in grass){
+                var g:Grass = grass[i];
+				var key:int = getSectorId(g);
+				if((_dinosaur as TRex).checkedSectors[key]){
+						continue;
+				}
+				
                 var distanceToGrass:int = Math.sqrt((Math.pow(g.x - _dinosaur.x,2) + Math.pow(g.y - _dinosaur.y,2)));
-                if(isGoalForAnotherDinosaur(g)) continue;
                 if(g.IsEdible && !fallbackGrass){
                     fallbackGrass = g;
                 }
-                if(distanceToGrass < _dinosaur.DinoVisionDistance && distanceToGrass > 2 && g.IsEdible){
+                if(distanceToGrass < _dinosaur.DinoVisionDistance && g.IsEdible){
                     fallbackGrass = g;
-                    if(Grass.getGrowthPercent(g.x/Grass.GROWTH_RES,g.y/Grass.GROWTH_RES) > ACCEPTABLE_GROWTH){
+                    //if(Grass.getGrowthPercent(g.x/Grass.GROWTH_RES,g.y/Grass.GROWTH_RES) > ACCEPTABLE_GROWTH){
                         var distanceToCurrentMinGrass:int = (minGrass) ? Math.sqrt((Math.pow(g.x - _dinosaur.x,2) + Math.pow(g.y - _dinosaur.y,2))) : _dinosaur.DinoVisionDistance*2;
                         if(distanceToGrass < distanceToCurrentMinGrass){
                             minGrass = g;
+							(_dinosaur as TRex).checkedSectors[key] = true;
                             break;
                         }
-                    }
+                    //}
                 }
             }
+			if(!fallbackGrass){
+				(_dinosaur as TRex).checkedSectors = new Dictionary();
+				return getNewPointInSector();
+			}
             if(!minGrass){
                 minGrass = fallbackGrass;
             }
@@ -117,13 +121,32 @@ package dinosaurs.behaviors
             _dinosaur.goalTile = minGrass;
             return new Point(minGrass.x,minGrass.y);
         }
-        
-        private function isGoalForAnotherDinosaur(g:Tile):Boolean {
-            for(var i:int in DinoSwarms.galHolder){
-                var d:Dinosaur = DinoSwarms.galHolder[i];
-                if(g == d.goalTile) return true;
-            }
-            return false;
-        }
+		
+		private function getSectorId(g:Grass):int {
+			var numOfSectors:int = TileMap.WIDTH/Grass.GROWTH_RES;
+			return numOfSectors*(int(g.y/Grass.GROWTH_RES)) + int(g.x/Grass.GROWTH_RES);
+		}
+		
+		private function getAdjacentSectorsOfGrass():Array {
+			var grass:Array = [];
+			for(var i:int = Math.floor(_dinosaur.x/Grass.GROWTH_RES) - 1; i < Math.floor(_dinosaur.x/Grass.GROWTH_RES) + 3; ++i){
+				if(i < 0) continue;
+				if(i >= _dinosaur.shuffledGrass.length) break;
+				for(var j:int = Math.floor(_dinosaur.y/Grass.GROWTH_RES) - 1; j < Math.floor(_dinosaur.y/Grass.GROWTH_RES) + 3; ++j){
+					if(j < 0) continue;
+					if(j >= _dinosaur.shuffledGrass[i].length) break;
+					grass = grass.concat(_dinosaur.shuffledGrass[i][j]);
+				}
+			}
+			
+			//var returned:Array = ;
+			//for(var k:int = 0; k
+			
+			if(grass.length == 0){
+				trace("WTF");
+			}
+			
+			return grass;
+		}
     }
 }
