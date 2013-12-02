@@ -40,9 +40,9 @@ package dinosaurs
             _carnivore = true;
             
             _stateMachine = new StateMachine();
-            var search:State = new State();
-            var hunt:State = new State();
-            var eat:State = new State();
+            var search:State = new State("search");
+            var hunt:State = new State("hunt");
+            var eat:State = new State("eat");
             
             search.action = new SearchForGallimimus(this).search;
             var searchToHuntTransition:ITransition = new Transition();
@@ -97,6 +97,9 @@ package dinosaurs
             eat.transitions.push(goBackToSearch);
             
             _stateMachine.currentState = search;
+			search.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName ); };
+			hunt.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName ); };
+			eat.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName ); };
         }
         
         public function checkIfGallimimusInRange():Boolean {

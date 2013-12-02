@@ -52,5 +52,9 @@ package FiniteStateMachine
 		{
 			_currentState = type;
 		}
+		public function get currentStateName():String
+		{
+			return _currentState.name;
+		}
 	}
 }

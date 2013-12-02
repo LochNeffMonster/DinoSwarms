@@ -6,14 +6,16 @@ package FiniteStateMachine
 		private var _entryAction:Function;
 		private var _exitAction:Function;
 		private var _transitions:Array = [];
+		private var _name:String;
 		/**
 		 * 
 		 * @param entryAction sets the entry action that will be called on entry into this state
 		 * @param exitAction sets the exit action that will be called when leaving this state
 		 * @param transitions sets the transitions to call from this state to another
 		 */
-		public function State()
+		public function State(name:String)
 		{
+			_name = name;
 		}
 		/**
 		 * Determines the action appropriate for being in this state. 
@@ -57,6 +59,10 @@ package FiniteStateMachine
 		public function set transitions(type:Array):void
 		{
 			_transitions = type;
+		}
+		public function get name():String
+		{
+			return _name;
 		}
 	}
 }
