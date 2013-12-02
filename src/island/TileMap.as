@@ -5,12 +5,15 @@ import flash.display.Sprite;
 import flash.events.Event;
 import flash.geom.Rectangle;
 import flash.utils.Dictionary;
+import flash.utils.getDefinitionByName;
+import flash.utils.getQualifiedClassName;
+
+import dinosaurs.Dinosaur;
 
 import events.TileEvent;
 
 import island.tiles.Grass;
 import island.tiles.Tile;
-import island.tiles.Water;
 
 public class TileMap extends Sprite
 {
@@ -24,6 +27,7 @@ public class TileMap extends Sprite
 	
 	private var bitmap:BitmapData = new BitmapData(WIDTH*TILE_SIZE, HEIGHT*TILE_SIZE, false);
 	private var tileMap:Vector.<Vector.<Tile>> = new Vector.<Vector.<Tile>>(WIDTH);
+	private var tileClassMapping:Dictionary = new Dictionary();
 	
 	private var updateFrame:int = 0;
 	private var updateList:Vector.<Array> = new Vector.<Array>(MAX_UPDATE_DELAY);
@@ -46,9 +50,6 @@ public class TileMap extends Sprite
 		//In order to access tileMap[x][y]
 		for(var i:int = 0; i<WIDTH; i++){
 			tileMap[i] = new Vector.<Tile>(HEIGHT);
-			for(var j:int = 0; j<HEIGHT; j++){
-				tileMap[i][j] = new Water();
-			}
 		}
 		
 		for(i=0; i<MAX_UPDATE_DELAY; i++){
@@ -87,11 +88,23 @@ public class TileMap extends Sprite
 	 * */
 	public function setTile(x:int, y:int, tile:Tile):void {
 		if(tileMap[x][y]){
-			tileMap[x][y].onRemoveFromTilemap();
-			tileMap[x][y].tilemap = null;
-			delete updateList[tileMap[x][y]];
+			var deleteTile:Tile = tileMap[x][y];
+			var deleteClass:Object = getDefinitionByName(getQualifiedClassName(deleteTile));
+			
+			var deleteIndex:int = tileClassMapping[deleteClass].indexOf(deleteTile);
+			tileClassMapping[deleteClass].splice(deleteIndex, 1);	
+			
+			deleteTile.onRemoveFromTilemap();
+			deleteTile.tilemap = null;
+			delete updateList[deleteTile];
 			tileMap[x][y] = null;
 		}
+		
+		var tileClass:Object = getDefinitionByName(getQualifiedClassName(tile));
+		if(!tileClassMapping[tileClass]){
+			tileClassMapping[tileClass] = [];
+		}
+		tileClassMapping[tileClass].push(tile);	
 		
 		tileMap[x][y] = tile;
 		bitmap.fillRect(new Rectangle(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE), tile.getColor());
@@ -99,6 +112,16 @@ public class TileMap extends Sprite
 		tile.x = x;
 		tile.y = y;
 		tile.onAddToTileMap();
+	}
+
+	/**Returns an array of all tiles that match the given class.
+	 * Use example:  getTilesFromClass(Sand);   
+	 * 
+	 * @param tileClass of tiles to return
+	 * @return Array of tiles that match the tileClass
+	 */
+	public function getTilesFromClass(tileClass:Object):Array{
+		return tileClassMapping[tileClass];
 	}
 	
 	public static function get CurrentMap():TileMap {
@@ -209,7 +232,8 @@ public class TileMap extends Sprite
 			trace("I can't eat that"+currentTile);
 			return;
 		}
-		(currentTile as Grass).onEatGrass();
+        
+		(currentTile as Grass).onEatGrass(e.Data);
 	}
 }
 }

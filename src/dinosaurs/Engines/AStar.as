@@ -49,7 +49,6 @@ package dinosaurs.Engines
 			}
 			_openList = [];
 			_end = new Point(endX,endY);
-			trace("STARTING X: " + startX);
 			_start = new Node(startX, startY, null, 0, GenerateHeuristic(startX, startY), 1);
 			_currentNode = _start;
 			//start at position 1 to make later math easier
@@ -88,9 +87,9 @@ package dinosaurs.Engines
 						var tempNode:Node = new Node(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
 							+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
 							GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
-
+						
 						if (_allNodes[(_Pos.x + i)][(_Pos.y + j)] is Node) {
-
+							
 							if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].EstimatedCost > tempNode.EstimatedCost)
 							{
 								if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].State == 1)
@@ -101,7 +100,6 @@ package dinosaurs.Engines
 								else
 								{
 									AddOpenList(tempNode);
-									trace("added Nodes");
 									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
 								}
 							}
@@ -111,7 +109,6 @@ package dinosaurs.Engines
 						else
 						{
 							AddOpenList(tempNode);
-							trace("added Nodes:");
 							_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
 						}
 					}
@@ -125,13 +122,11 @@ package dinosaurs.Engines
 			}
 			if ((_Pos.x - _end.x < -1 || _Pos.x - _end.x > 1) || (_Pos.y - _end.y < -1 || _Pos.y - _end.y > 1))
 			{
-				trace("DIDN't find gaol");
 				return null;
 			}
-			
+				
 			else
 			{
-				trace("ffffffffffffffffooooooooooooooooooooND IT")
 				var returnList:Array = [];
 				returnList[0] = _currentNode.Coordinate;
 				while (_currentNode != _start)
@@ -155,7 +150,7 @@ package dinosaurs.Engines
 			//sorts the new node up the tree based on its cost
 			while (true)
 			{
-
+				
 				if (currPos != 1 && newCost < _openList[parentNode].EstimatedCost)
 				{
 					_openList[currPos] = _openList[parentNode];
@@ -165,7 +160,7 @@ package dinosaurs.Engines
 					parentNode = currPos / 2;
 					_nodePos[NewNode.Coordinate.x][NewNode.Coordinate.y] = currPos;
 				}
-				
+					
 				else
 				{
 					_nodePos[NewNode.Coordinate.x][NewNode.Coordinate.y] = currPos;
@@ -208,7 +203,7 @@ package dinosaurs.Engines
 						_nodePos[_openList[(2 * currPos)].Coordinate.x][_openList[(2 * currPos)].Coordinate.y] = (2 * currPos);
 						currPos = 2 * currPos;
 					}
-					
+						
 					else
 					{
 						break;
@@ -248,7 +243,7 @@ package dinosaurs.Engines
 					_nodePos[RefNode.Coordinate.x][RefNode.Coordinate.y] = currPos;
 					break;
 				}
-
+					
 				else if (newCost < _openList[(int)(currPos / 2)].EstimatedCost)
 				{
 					_openList[currPos] = _openList[(int)(currPos / 2)];
@@ -282,3 +277,4 @@ package dinosaurs.Engines
 		
 	}
 }
+
