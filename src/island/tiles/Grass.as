@@ -87,13 +87,24 @@ public class Grass extends Tile{
         }
         var shuffled:Array = new Array(capy.length);
         var randomPos:Number = 0;
+        
+        var sectors:Array = [];
+        for(var k:int = 0; k < TileMap.WIDTH / GROWTH_RES; ++k){
+            sectors[k] = [];
+            for(var l:int = 0; l < TileMap.HEIGHT / GROWTH_RES; ++l){
+                sectors[k][l] = [];
+            }
+        }
+                
         for (var i:int = 0; i < shuffled.length; i++) //use shuffledLetters.length because splice() will change letters.length
         {
             randomPos = int(Math.random() * capy.length);
-            shuffled[i] = capy[randomPos];    //note this the other way around to the naive approach
+            //shuffled[i] = capy[randomPos];    //note this the other way around to the naive approach
+            var g:Grass = capy[randomPos];
+            (sectors[Math.floor(g.x/Grass.GROWTH_RES)][Math.floor(g.y/Grass.GROWTH_RES)]).push(g);
             capy.splice(randomPos, 1);
         }
-        return shuffled;
+        return sectors;
     }
 	
 	public static function getGrowthPercent(sectorX:int, sectorY:int):Number{
