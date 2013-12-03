@@ -170,7 +170,8 @@ package dinosaurs
 			if (!Leader.currentPath || Leader.currentPath.length == 0)
 			{
 				leader = this;
-				currentPath.splice(0);
+				if (currentPath)
+					currentPath.splice(0);
 				graphics.clear();
 				graphics.beginFill(0xFF0000);
 				graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
