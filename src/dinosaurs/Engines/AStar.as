@@ -36,6 +36,9 @@ package dinosaurs.Engines
 		
 		public function GeneratePath(startX:Number, startY:Number, endX:Number, endY:Number, dino:Dinosaur):Array
 		{
+			if (!TileMap.CurrentMap.getTile(endX, endY))
+				return null;
+			
 			startX = Math.floor(startX);
 			startY = Math.floor(startY);
 			//setting variables and current node
@@ -69,7 +72,7 @@ package dinosaurs.Engines
 				//did we reach our goal?
 				if (_Pos.x == _end.x && _Pos.y == _end.y)
 				{
-					var _Pos:Point = _currentNode.Coordinate;
+					_Pos = _currentNode.Coordinate;
 					break;
 				}
 				
