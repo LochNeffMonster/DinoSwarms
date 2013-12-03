@@ -24,8 +24,8 @@ package dinosaurs
 			_dirtCost = 1;
 			_grassCost = 2;
 			_sandCost = 3;
-            //_eatRate = Math.random()*.015 + .01;
-			_eatRate = 1;
+            _eatRate = Math.random()*.015 + .01;
+			//_eatRate = 1;
 			graphics.beginFill(0xFF0000);
 			graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
 			graphics.endFill();
@@ -38,15 +38,24 @@ package dinosaurs
 			
 			_carnivore = false;
 			_stateMachine = new StateMachine();
-			//Search for food and eat initializations
-			var search:State = new State();
-			var eat:State = new State();
+			
+
+			//Search
+			var search:State = new State("search");
+			//search.entryAction = _stateMachine.currentStateName();
+			var eat:State = new State("eat");
+			//eat.entryAction = _stateMachine.currentStateName();
+
 			search.action = new SearchForFood(this).search;
 			_stateMachine.currentState = search;
+			
+			search.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName); };
+			eat.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName); };
+			
 			var transitionToEat:Transition = new Transition();
 			transitionToEat.targetState = eat;
 			transitionToEat.condition = function():Boolean {
-				if(targetPoint && currentPath.length == 0){
+				if(targetPoint && currentPath && currentPath.length == 0){
                     targetPoint.x = goalTile.x;
                     targetPoint.y = goalTile.y;
 					var dx:Number = Math.abs(targetPoint.x - x);
@@ -87,7 +96,7 @@ package dinosaurs
             eat.transitions.push(eatTransition);
 			
 			//Flocking
-			var flock:State = new State();
+			var flock:State = new State("Flock");
 			flock.action = new Flock(this).FlockwLeader;
 			var transitionToFlock:Transition = new Transition();
 			transitionToFlock.targetState = flock;
@@ -95,8 +104,12 @@ package dinosaurs
 			var transitionFromFlock:Transition = new Transition();
 			transitionFromFlock.targetState = search;
 			transitionFromFlock.condition = NoFlock;
+			var transitionIfLeader:Transition = new Transition();
+			transitionIfLeader.targetState = search;
+			transitionIfLeader.condition = IsLeader;
 			search.transitions.push(transitionToFlock);
 			flock.transitions.push(transitionFromFlock);
+			flock.transitions.push(transitionIfLeader);
 		}
 		
 		protected override function onUpdate(e:Event):void{
@@ -121,7 +134,7 @@ package dinosaurs
 			for each (var d:Dinosaur in DinoSwarms.galHolder)
 			{
 				var hypo:Number = Math.sqrt(Math.pow(d.x - this.x, 2) + Math.pow(d.y - this.y, 2));
-				if (hypo <= visionRange.x)
+				if (hypo <= visionRange.x && hypo > 0 && d.currentPath && d.currentPath.length != 0)
 				{
 					if (targetPoint != null){
 						var hypo2:Number = Math.sqrt(Math.pow(targetPoint.x - this.x, 2) + Math.pow(targetPoint.y - this.y, 2));
@@ -131,17 +144,22 @@ package dinosaurs
 						{
 							//checks to make sure the leader is moving
 							if (d.currentPath && d.currentPath.length > 0)
+							{
 								leader = d.Leader;
-								if (leader = this)
+								if (leader == this)
 									return false;
-							return true;
+								graphics.clear();
+								graphics.beginFill(0xFFFFFF);
+								graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+								return true;
+							}
 						}
 					}
-					else
-					{
-						leader = d.Leader;
-						return true;
-					}
+//					else
+//					{
+//						leader = d.Leader;
+//						return true;
+//					}
 				}
 			}
 			return false;
@@ -152,8 +170,17 @@ package dinosaurs
 			if (!Leader.currentPath || Leader.currentPath.length == 0)
 			{
 				leader = this;
+				graphics.clear();
+				graphics.beginFill(0xFF0000);
+				graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
 				return true;
 			}
+			return false;
+		}
+		
+		public function IsLeader():Boolean{
+			if (Leader == this)
+				return true;
 			return false;
 		}
 	}

@@ -73,7 +73,7 @@ package dinosaurs.behaviors
 				while(!_dinosaur.currentPath || _dinosaur.currentPath.length == 0){
 					var tmpPoint:Point = getNewPointInSector();
 					_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmpPoint.x,tmpPoint.y,_dinosaur);
-                    if(_dinosaur.currentPath.length == 0){
+                    if(!_dinosaur.currentPath || _dinosaur.currentPath.length == 0){
                         for(var i:int in _dinosaur.shuffledGrass){
                             if(_dinosaur.goalTile == _dinosaur.shuffledGrass[i]){
                                 _dinosaur.shuffledGrass.splice(i,1);

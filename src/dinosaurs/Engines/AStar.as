@@ -27,6 +27,7 @@ package dinosaurs.Engines
 		}
 		
 		public function AStar(){
+
 		}
 		
 		public static function get CurrentAStar():AStar {
@@ -35,10 +36,14 @@ package dinosaurs.Engines
 		
 		public function GeneratePath(startX:Number, startY:Number, endX:Number, endY:Number, dino:Dinosaur):Array
 		{
+			startX = Math.floor(startX);
+			startY = Math.floor(startY);
 			//setting variables and current node
 			_dino = dino;
+			_openList = [];
 			_nodePos = []; //quick Node pos look up
 			_allNodes = []; //quick Node look up
+			
 			for(var i:int = 0; i<TileMap.WIDTH; ++i){
 				_nodePos.push([]);
 				_allNodes.push([]);
@@ -47,7 +52,6 @@ package dinosaurs.Engines
 					_allNodes[i].push([]);
 				}
 			}
-			_openList = [];
 			_end = new Point(endX,endY);
 			_start = new Node(startX, startY, null, 0, GenerateHeuristic(startX, startY), 1);
 			_currentNode = _start;

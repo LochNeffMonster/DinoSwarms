@@ -14,7 +14,7 @@ package dinosaurs.behaviors
     public class Flock extends Behavior
     {
 		private var _dino:Dinosaur;
-		private var tick:int = 0;
+		private var tick:int = 30;
 		private var range:Number = 4;
 		
         public function Flock(dino:Dinosaur)
@@ -30,7 +30,7 @@ package dinosaurs.behaviors
 			var distance:Number;
             tick += 1;
 			
-			if (tick == 60)
+			if (tick >= 30 && _dino.Leader.currentPath && _dino.Leader.currentPath.length > 0)
 			{
 				var tmp:Vector.<Point> = VectorEngine.CurrentVectorEngine.ScatterTurkeys(new Point(_dino.x, _dino.y), range);
 				if (tmp[0] != tmp[1]) {
@@ -42,6 +42,15 @@ package dinosaurs.behaviors
 						_dino.targetPoint = _dino.currentPath.pop();
 					}
 				}
+				else
+				{
+					_dino.currentPath = AStar.CurrentAStar.GeneratePath(
+						_dino.x,_dino.y,_dino.Leader.currentPath[0].x,_dino.Leader.currentPath[0].y,_dino);
+				}
+				if (_dino.currentPath && _dino.currentPath.length > 0)
+					_dino.goalTile = TileMap.CurrentMap.getTile(_dino.currentPath[0].x, _dino.currentPath[0].y);
+				else
+					return;
 				tick = 0;
 			}
 			
@@ -62,6 +71,23 @@ package dinosaurs.behaviors
 				var currentTile:Tile = TileMap.CurrentMap.getTileFromCoord(Math.floor(_dino.x),Math.floor(_dino.y));
 				// If the dino is at their target, then set null to clear for next food search
 				if(currentTile == targetTile) _dino.targetPoint = null;
+			}
+			
+			if(!_dinosaur.targetPoint){
+				//make sure to overshoot the goalTile
+				for(var j:int=0;j<_dinosaur.Speed-1;++j){
+					if(_dinosaur.currentPath.length == 1){
+						break;
+					}
+					_dinosaur.currentPath.pop();
+				}
+				_dinosaur.targetPoint = _dinosaur.currentPath.pop();
+			}else{
+				dx = (_dinosaur.targetPoint.x - _dinosaur.x);
+				dy = (_dinosaur.targetPoint.y - _dinosaur.y);
+				distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
+				_dinosaur.x += (dx/distance)*_dinosaur.Speed;
+				_dinosaur.y += (dy/distance)*_dinosaur.Speed;
 			}
         }
     }
