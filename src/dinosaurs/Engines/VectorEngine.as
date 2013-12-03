@@ -8,7 +8,7 @@ package dinosaurs.Engines
 	{
 		private static var currentVectorEngine:VectorEngine;
 		
-		private var repulseDistance:int = 2;
+		private var repulseDistance:int = 10;
 		
 		{
 			currentVectorEngine = new VectorEngine();
