@@ -37,7 +37,7 @@ package dinosaurs.behaviors
 					var tmpPath:Array = AStar.CurrentAStar.GeneratePath(_dino.x,_dino.y,tmp[1].x, tmp[1].y, _dino);
 					if (tmpPath.length != 0){
 						_dino.currentPath = AStar.CurrentAStar.GeneratePath(
-							tmp[1].x,tmp[1].y,_dino.Leader.currentPath[0].x,_dino.Leader.currentPath[0].y,_dino);
+							tmp[1].x,tmp[1].y,_dino.Leader.x,_dino.Leader.y,_dino);
 						_dino.currentPath = tmpPath.concat(_dino.currentPath);
 						_dino.targetPoint = _dino.currentPath.pop();
 					}
@@ -45,7 +45,7 @@ package dinosaurs.behaviors
 				else
 				{
 					_dino.currentPath = AStar.CurrentAStar.GeneratePath(
-						_dino.x,_dino.y,_dino.Leader.currentPath[0].x,_dino.Leader.currentPath[0].y,_dino);
+						_dino.x,_dino.y,_dino.Leader.x,_dino.Leader.y,_dino);
 				}
 				if (_dino.currentPath && _dino.currentPath.length > 0)
 					_dino.goalTile = TileMap.CurrentMap.getTile(_dino.currentPath[0].x, _dino.currentPath[0].y);
