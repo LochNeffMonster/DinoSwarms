@@ -36,6 +36,9 @@ package dinosaurs.Engines
 		
 		public function GeneratePath(startX:Number, startY:Number, endX:Number, endY:Number, dino:Dinosaur):Array
 		{
+			if (!TileMap.CurrentMap.getTile(endX, endY).getTraversable)
+				return null;
+			
 			startX = Math.floor(startX);
 			startY = Math.floor(startY);
 			//setting variables and current node
