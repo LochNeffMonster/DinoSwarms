@@ -17,28 +17,36 @@ package dinosaurs
 	
 	public class Gallimimus extends Dinosaur
 	{        
-		public function Gallimimus()
+		public static const BIRF_PERIOD:int = 500; //amount of time it takes for a galimimus to birf
+		public function Gallimimus(startX,startY)
 		{
 			super();
 			_speed = 1;
 			_dirtCost = 1;
 			_grassCost = 2;
 			_sandCost = 3;
+
             _eatRate = Math.random()*.015 + .01;
-			//_eatRate = 1;
+
+			_birfTimer = BIRF_PERIOD;
+
 			graphics.beginFill(0xFF0000);
 			graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
 			graphics.endFill();
             _dinoDistance = 12;
+
 			
 			//for flocking
 			//first number is distance, second is angle range to either side.
 			visionRange = new Point(15, 45);
 			leader = this;
-			
+
 			_carnivore = false;
 			_stateMachine = new StateMachine();
-			
+			DinoSwarms.galHolder.push(this);
+			TileMap.CurrentMap.addChild(this);
+			x = startX;
+			y = startY;
 
 			//Search
 			var search:State = new State("search");
@@ -95,6 +103,7 @@ package dinosaurs
 			};
             eat.transitions.push(eatTransition);
 			
+
 			//Flocking
 			var flock:State = new State("Flock");
 			flock.action = new Flock(this).FlockwLeader;
@@ -110,12 +119,28 @@ package dinosaurs
 			search.transitions.push(transitionToFlock);
 			flock.transitions.push(transitionFromFlock);
 			flock.transitions.push(transitionIfLeader);
+
+			var birthTransition:Transition = new Transition();
+			birthTransition.targetState = search;
+			birthTransition.condition = function():Boolean {		
+				var currentTile:Tile = TileMap.CurrentMap.getTileFromCoord(x,y);
+				if(_birfTimer <= 0 && energy >= 100){
+					new Gallimimus(x,y);
+					energy = 50;
+					_birfTimer = BIRF_PERIOD;
+				}
+			};
+			eat.transitions.push(birthTransition);
 		}
+
 		
 		protected override function onUpdate(e:Event):void{
 			var actions:Array = _stateMachine.update();
 			for(var a:int in actions){
 				actions[a]();
+			}
+			if(_birfTimer>0){ 
+				_birfTimer--;
 			}
 		}
         
@@ -123,6 +148,7 @@ package dinosaurs
             //TileMap.CurrentMap.addChild(this);
             trace(this);
             parent.removeChild(this);
+			targetPointSprite.parent.removeChild(targetPointSprite);
             for(var i:int in DinoSwarms.galHolder){
                 if(DinoSwarms.galHolder[i] == this){
                     DinoSwarms.galHolder.splice(i,1);

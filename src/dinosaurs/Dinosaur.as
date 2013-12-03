@@ -15,7 +15,7 @@ package dinosaurs
 		public static const MAX_ENERGY:Number = 100;
 		
 		protected var _carnivore:Boolean;
-		protected var _energy:Number;
+		protected var _birfTimer:int; 
 		protected var _stateMachine:StateMachine;
 		protected var _speed:int;
         protected var _eatRate:Number;
@@ -28,15 +28,17 @@ package dinosaurs
 		protected var visionRange:Point;
 		protected var leader:Dinosaur;
 		
+		public var energy:Number; //between 0 and 100
 		public var targetPoint:Point;
 		public var currentPath:Array;
         public var goalTile:Tile;
         public var shuffledGrass:Array;
+		public var targetPointSprite:Sprite;
 		
 		public function Dinosaur()
 		{
 			super();
-			_energy = 70;
+			energy = 70;
 			addEventListener(Event.ADDED_TO_STAGE, init);
             addEventListener(Event.REMOVED_FROM_STAGE, onRemoved);
 			//targetPoint = new Point();

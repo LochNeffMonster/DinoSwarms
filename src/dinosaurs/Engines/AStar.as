@@ -28,13 +28,20 @@ package dinosaurs.Engines
 		
 		public function AStar(){
 
+			_nodePos = []; //quick Node pos look up
+			_allNodes = []; //quick Node look up
+			for(var i:int = 0; i<TileMap.WIDTH; ++i){
+				_nodePos.push([]);
+				_allNodes.push([]);
+			}
+
 		}
 		
 		public static function get CurrentAStar():AStar {
 			return currentAStar;
 		}
 		
-		public function GeneratePath(startX:Number, startY:Number, endX:Number, endY:Number, dino:Dinosaur):Array
+		public function GeneratePath(startX:int, startY:int, endX:int, endY:int, dino:Dinosaur):Array
 		{
 			if (!TileMap.CurrentMap.getTile(endX, endY).getTraversable)
 				return null;
@@ -43,16 +50,11 @@ package dinosaurs.Engines
 			startY = Math.floor(startY);
 			//setting variables and current node
 			_dino = dino;
-			_openList = [];
-			_nodePos = []; //quick Node pos look up
-			_allNodes = []; //quick Node look up
-			
+
 			for(var i:int = 0; i<TileMap.WIDTH; ++i){
-				_nodePos.push([]);
-				_allNodes.push([]);
 				for(var j:int = 0; j<TileMap.HEIGHT; ++j){
-					_nodePos[i].push([]);
-					_allNodes[i].push([]);
+					_nodePos[i][j] = 0;
+					_allNodes[i][j] = 0;
 				}
 			}
 			_end = new Point(endX,endY);
@@ -135,7 +137,8 @@ package dinosaurs.Engines
 			else
 			{
 				var returnList:Array = [];
-				returnList[0] = _currentNode.Coordinate;
+				returnList[0] = _end;
+				returnList[1] = _currentNode.Coordinate;
 				while (_currentNode != _start)
 				{
 					_currentNode = _allNodes[_currentNode.Connection.x][_currentNode.Connection.y];
