@@ -15,7 +15,7 @@ package dinosaurs.behaviors
     public class Flee extends Behavior
     {
 		private var _dino:Dinosaur;
-		private var tick:int = 60;
+		private var tick:int = 120;
 		private var range:Number = 4;
 		
         public function Flee(dino:Dinosaur)
@@ -31,7 +31,7 @@ package dinosaurs.behaviors
 			var distance:Number;
             tick += 1;
 			
-			if (tick >= 60)
+			if (tick >= 120)
 			{
 				var tmp:Vector.<Point> = VectorEngine.CurrentVectorEngine.FleeTurkeys(new Point(_dino.x, _dino.y), 20);
 				if (tmp[0] != tmp[1]) {
@@ -43,11 +43,12 @@ package dinosaurs.behaviors
 					{
 						var tx:Number = t.x - _dino.x;
 						var ty:Number = t.y - _dino.y;
-						if(Math.sqrt(Math.pow(t.x, 2) + Math.pow(t.y, 2)) <= 20)
+						if(Math.sqrt(Math.pow(t.x, 2) + Math.pow(t.y, 2)) <= 20 && DinoSwarms.trexHolder.length > 1)
 						{
 							_dino.currentPath = AStar.CurrentAStar.GeneratePath(
 								_dino.x,_dino.y,t.x,t.y,_dino);
 							break;
+
 						}
 					}
 					

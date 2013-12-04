@@ -36,7 +36,7 @@ package dinosaurs.Engines
 			//use repulse distance to determine strength of repulsion
 			// > repulse distance = weak; < repulse distance = strong
 			hypno = hypno / repulseDistance;
-			hypno = hypno * hypno;
+			hypno = hypno * 2;
 			target.x += target.x / hypno;
 			target.y += target.y / hypno;
 			//get target

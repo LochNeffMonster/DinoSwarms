@@ -15,6 +15,7 @@ package dinosaurs.behaviors
     {
         private var _gallimimusPoint:Point;
 		private var huntPathViz:Sprite;
+		private var tick:int = 1;
         
         public function Hunt(dino:Dinosaur)
         {
@@ -25,6 +26,8 @@ package dinosaurs.behaviors
             var dx:Number;
             var dy:Number;
             var distance:Number;
+			
+			tick += 1;
 			
             // if the dino has a target tile to get to
             if(_dinosaur.targetPoint){
@@ -45,8 +48,12 @@ package dinosaurs.behaviors
             if(!_dinosaur.targetPoint){
                 // while the dino doesn't have a path, or that they are at their target already
                 var tg:Gallimimus = (_dinosaur as TRex).TargetGallimimus;
-				_gallimimusPoint = new Point(tg.x,tg.y);
-				_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,Math.floor(tg.x),Math.floor(tg.y),_dinosaur);
+				if (tick >=30)
+				{
+					_gallimimusPoint = new Point(tg.x,tg.y);
+					_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,Math.floor(tg.x),Math.floor(tg.y),_dinosaur);
+					tick = 0;
+				}
                 if(!_dinosaur.currentPath){
                     _gallimimusPoint = new Point(tg.x,tg.y);
                     _dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
