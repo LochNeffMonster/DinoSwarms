@@ -1,7 +1,7 @@
 package dinosaurs.Engines
 {
-	
 	import flash.geom.Point;
+	import flash.utils.Dictionary;
 	
 	import dinosaurs.Dinosaur;
 	import dinosaurs.Engines.Node;
@@ -19,6 +19,7 @@ package dinosaurs.Engines
 		protected var _start:Node; //Starting Node
 		protected var _end:Point; //Ending coordinates
 		protected var _currentNode:Node; //Current Node being processed
+		protected var _nodeDictionary:Dictionary = new Dictionary();
 		
 		protected var _dino:Dinosaur; //needed for different pathing costs 
 		
@@ -62,10 +63,18 @@ package dinosaurs.Engines
 				}
 			}
 			_end = new Point(endX,endY);
-			_start = new Node(startX, startY, null, 0, GenerateHeuristic(startX, startY), 1);
+			if (!_nodeDictionary[startY * TileMap.WIDTH + startX]){
+				_nodeDictionary[startY * TileMap.WIDTH + startX] = new Node(startX, startY, null, 0, GenerateHeuristic(startX, startY), 1);
+			}
+			else
+			{
+				_nodeDictionary[startY * TileMap.WIDTH + startX].Update(startX, startY, null, 0, GenerateHeuristic(startX, startY), 1);
+			}
+			
+			_start = _nodeDictionary[startY * TileMap.WIDTH + startX];
 			_currentNode = _start;
 			//start at position 1 to make later math easier
-			_openList[1] = _start;
+			_openList[1] = _nodeDictionary[startY * TileMap.WIDTH + startX];
 			_allNodes[startX][startY] = _start;
 			_nodePos[startX][startY] = 1;
 			
@@ -79,6 +88,7 @@ package dinosaurs.Engines
 				//did we reach our goal?
 				if (_Pos.x == _end.x && _Pos.y == _end.y)
 				{
+					trace("broke out of it");
 					break;
 				}
 				
@@ -97,26 +107,40 @@ package dinosaurs.Engines
 						if (!TileMap.CurrentMap.getTileFromCoord(_Pos.x + i, _Pos.y + j).getTraversable()) 
 						{continue;}
 						
-						var tempNode:Node = new Node(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
-							+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
-							GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
+						if (!_nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)]){
+							_nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)] = 
+								new Node(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
+								+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
+								GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
+						}
+
+						
+						//var tempNode:Node = _nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)];
 						
 						if(GenerateHeuristic(_Pos.x + i, _Pos.y + j) == 0)
+						{
 							trace("found it");
+						}
 						
 						if (_allNodes[(_Pos.x + i)][(_Pos.y + j)] is Node) {
 							
-							if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].EstimatedCost > tempNode.EstimatedCost)
+							if (_currentNode.Connection != _allNodes[(_Pos.x + i)][(_Pos.y + j)].Coordinate &&
+								_allNodes[(_Pos.x + i)][(_Pos.y + j)].EstimatedCost > _currentNode.CostSoFar
+								+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)))
 							{
+								_nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)].Update(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
+									+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
+									GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
+								trace("we ran into the same node ok?!?!?!");
 								if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].State == 1)
 								{
-									UpdateOpenList(tempNode);
-									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
+									UpdateOpenList(_nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)]);
+									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = _nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)];
 								}
 								else
 								{
-									AddOpenList(tempNode);
-									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
+									AddOpenList(_nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)]);
+									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = _nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)];
 								}
 							}
 							else
@@ -124,8 +148,11 @@ package dinosaurs.Engines
 						}
 						else
 						{
-							AddOpenList(tempNode);
-							_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
+							_nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)].Update(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
+								+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
+								GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
+							AddOpenList(_nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)]);
+							_allNodes[(_Pos.x + i)][(_Pos.y + j)] = _nodeDictionary[(_Pos.y + j) * TileMap.WIDTH + (_Pos.x + i)];
 						}
 					}
 				}
@@ -157,6 +184,8 @@ package dinosaurs.Engines
 		
 		private function AddOpenList(NewNode:Node):void
 		{
+			if(!NewNode)
+				trace("Bacon Supreme");
 			//get last position in open list and Estimated Cost of the new node
 			var newCost:Number = NewNode.EstimatedCost;
 			var currPos:int = _openList.length;
@@ -166,7 +195,6 @@ package dinosaurs.Engines
 			//sorts the new node up the tree based on its cost
 			while (true)
 			{
-				
 				if (currPos != 1 && newCost < _openList[parentNode].EstimatedCost)
 				{
 					_openList[currPos] = _openList[parentNode];
@@ -189,7 +217,15 @@ package dinosaurs.Engines
 		private function PopOpenList():void
 		{
 			var currPos:int = 1;
-			var tmpNode:Node = _openList.pop();
+			if(!_openList[_openList.length-1]){
+				trace("wtf");
+			}
+			var tmpNode:Node;
+			while(!tmpNode){
+				tmpNode = _openList.pop();
+			}
+			if (!tmpNode)
+				trace("Tracey Larabee");
 			_openList[1] = tmpNode;
 			while (true)
 			{
@@ -246,6 +282,9 @@ package dinosaurs.Engines
 		
 		private function UpdateOpenList(RefNode:Node):void
 		{
+			if(!RefNode){
+				trace("testingkgfdjlag");
+			}
 			var newCost:Number = RefNode.EstimatedCost;
 			var currPos:int = _nodePos[RefNode.Coordinate.x][RefNode.Coordinate.y];
 			

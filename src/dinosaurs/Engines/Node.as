@@ -53,7 +53,18 @@ package dinosaurs.Engines
 		{
 			return _Connection;
 		}
+		
+		public function Update(Xoor:Number, Yoor:Number, Connection:Point, CostSoFar:Number, Heuristic:Number, State:int):void
+		{
+			_Coordinate.x = Xoor;
+			_Coordinate.y = Yoor;
+			_Connection = Connection;
+			_CostSoFar = CostSoFar;
+			_Heuristic = Heuristic;
+			_EstimatedCost = _CostSoFar + _Heuristic;
+			_State = State;
+		}
 	}
 }
-import dinosaurs.Engines;
+
 
