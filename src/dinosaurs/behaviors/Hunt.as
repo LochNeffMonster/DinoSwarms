@@ -46,12 +46,14 @@ package dinosaurs.behaviors
                 // while the dino doesn't have a path, or that they are at their target already
                 var tg:Gallimimus = (_dinosaur as TRex).TargetGallimimus;
 				_gallimimusPoint = new Point(tg.x,tg.y);
-				_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
+				_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,Math.floor(tg.x),Math.floor(tg.y),_dinosaur);
                 if(!_dinosaur.currentPath){
                     _gallimimusPoint = new Point(tg.x,tg.y);
                     _dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
 					if(!_dinosaur.currentPath){
 						trace("bacon");
+						var tmpTile:Tile = TileMap.CurrentMap.getTile(Math.floor(tg.x), Math.floor(tg.y));
+						_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
 					}
                 }else if(_gallimimusPoint.x != tg.x || _gallimimusPoint.y != tg.y){
 					/*TileMap.CurrentMap.addChild(huntPathViz);

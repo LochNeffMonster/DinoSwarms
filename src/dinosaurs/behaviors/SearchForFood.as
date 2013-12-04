@@ -137,7 +137,7 @@ package dinosaurs.behaviors
 
 			_dinosaur.targetPointSprite = new Sprite();
 			_dinosaur.targetPointSprite.graphics.beginFill(0x000000);
-			_dinosaur.targetPointSprite.graphics.drawRect(0,0,3,3);
+			_dinosaur.targetPointSprite.graphics.drawRect(0,0,1,1);
 			_dinosaur.targetPointSprite.graphics.endFill();
 			_dinosaur.targetPointSprite.x = minGrass.x;
 			_dinosaur.targetPointSprite.y = minGrass.y;

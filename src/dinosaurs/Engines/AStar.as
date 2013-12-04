@@ -48,8 +48,10 @@ package dinosaurs.Engines
 			
 			startX = Math.floor(startX);
 			startY = Math.floor(startY);
+
 			//setting variables and current node
 			_dino = dino;
+			_openList = [];
 
 			for(var i:int = 0; i<TileMap.WIDTH; ++i){
 				for(var j:int = 0; j<TileMap.HEIGHT; ++j){
@@ -70,11 +72,11 @@ package dinosaurs.Engines
 			{
 				//next node always at top of priority heap
 				_currentNode = _openList[1];
+				PopOpenList();
 				var _Pos:Point = _currentNode.Coordinate;
 				//did we reach our goal?
 				if (_Pos.x == _end.x && _Pos.y == _end.y)
 				{
-					var _Pos:Point = _currentNode.Coordinate;
 					break;
 				}
 				
@@ -96,6 +98,9 @@ package dinosaurs.Engines
 						var tempNode:Node = new Node(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
 							+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
 							GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
+						
+						if(GenerateHeuristic(_Pos.x + i, _Pos.y + j) == 0)
+							trace("found it");
 						
 						if (_allNodes[(_Pos.x + i)][(_Pos.y + j)] is Node) {
 							
@@ -125,7 +130,6 @@ package dinosaurs.Engines
 				if (_openList.length == 2)
 					break;
 				
-				PopOpenList();
 				_currentNode.setState(2);
 				_allNodes[_Pos.x][_Pos.y] = _currentNode;
 			}
