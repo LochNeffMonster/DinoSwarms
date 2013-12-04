@@ -28,31 +28,37 @@ package dinosaurs.Engines
 		
 		public function AStar(){
 
+			_nodePos = []; //quick Node pos look up
+			_allNodes = []; //quick Node look up
+			for(var i:int = 0; i<TileMap.WIDTH; ++i){
+				_nodePos.push([]);
+				_allNodes.push([]);
+			}
+
 		}
 		
 		public static function get CurrentAStar():AStar {
 			return currentAStar;
 		}
 		
-		public function GeneratePath(startX:Number, startY:Number, endX:Number, endY:Number, dino:Dinosaur):Array
+		public function GeneratePath(startX:int, startY:int, endX:int, endY:int, dino:Dinosaur):Array
 		{
-			if (!TileMap.CurrentMap.getTile(endX, endY))
+			if (!TileMap.CurrentMap.getTile(endX, endY).getTraversable)
 				return null;
 			
 			startX = Math.floor(startX);
 			startY = Math.floor(startY);
+			endX = Math.floor(endX);
+			endY = Math.floor(endY);
+
 			//setting variables and current node
 			_dino = dino;
 			_openList = [];
-			_nodePos = []; //quick Node pos look up
-			_allNodes = []; //quick Node look up
-			
+
 			for(var i:int = 0; i<TileMap.WIDTH; ++i){
-				_nodePos.push([]);
-				_allNodes.push([]);
 				for(var j:int = 0; j<TileMap.HEIGHT; ++j){
-					_nodePos[i].push([]);
-					_allNodes[i].push([]);
+					_nodePos[i][j] = 0;
+					_allNodes[i][j] = 0;
 				}
 			}
 			_end = new Point(endX,endY);
@@ -68,11 +74,11 @@ package dinosaurs.Engines
 			{
 				//next node always at top of priority heap
 				_currentNode = _openList[1];
+				PopOpenList();
 				var _Pos:Point = _currentNode.Coordinate;
 				//did we reach our goal?
 				if (_Pos.x == _end.x && _Pos.y == _end.y)
 				{
-					_Pos = _currentNode.Coordinate;
 					break;
 				}
 				
@@ -94,6 +100,9 @@ package dinosaurs.Engines
 						var tempNode:Node = new Node(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
 							+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
 							GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
+						
+						if(GenerateHeuristic(_Pos.x + i, _Pos.y + j) == 0)
+							trace("found it");
 						
 						if (_allNodes[(_Pos.x + i)][(_Pos.y + j)] is Node) {
 							
@@ -123,7 +132,6 @@ package dinosaurs.Engines
 				if (_openList.length == 2)
 					break;
 				
-				PopOpenList();
 				_currentNode.setState(2);
 				_allNodes[_Pos.x][_Pos.y] = _currentNode;
 			}
@@ -135,7 +143,8 @@ package dinosaurs.Engines
 			else
 			{
 				var returnList:Array = [];
-				returnList[0] = _currentNode.Coordinate;
+				returnList[0] = _end;
+				returnList[1] = _currentNode.Coordinate;
 				while (_currentNode != _start)
 				{
 					_currentNode = _allNodes[_currentNode.Connection.x][_currentNode.Connection.y];
