@@ -14,7 +14,7 @@ package dinosaurs.behaviors
     public class Flock extends Behavior
     {
 		private var _dino:Dinosaur;
-		private var tick:int = 30;
+		private var tick:int = 120;
 		private var range:Number = 4;
 		
         public function Flock(dino:Dinosaur)
@@ -30,12 +30,12 @@ package dinosaurs.behaviors
 			var distance:Number;
             tick += 1;
 			
-			if (tick >= 30 && _dino.Leader.currentPath && _dino.Leader.currentPath.length > 0)
+			if (tick >= 120 && _dino.Leader.currentPath && _dino.Leader.currentPath.length > 0)
 			{
 				var tmp:Vector.<Point> = VectorEngine.CurrentVectorEngine.ScatterTurkeys(new Point(_dino.x, _dino.y), range);
 				if (tmp[0] != tmp[1]) {
 					var tmpPath:Array = AStar.CurrentAStar.GeneratePath(_dino.x,_dino.y,tmp[1].x, tmp[1].y, _dino);
-					if (tmpPath.length != 0){
+					if (tmpPath && tmpPath.length != 0){
 						_dino.currentPath = AStar.CurrentAStar.GeneratePath(
 							tmp[1].x,tmp[1].y,_dino.Leader.x,_dino.Leader.y,_dino);
 						_dino.currentPath = tmpPath.concat(_dino.currentPath);
@@ -82,12 +82,6 @@ package dinosaurs.behaviors
 					_dinosaur.currentPath.pop();
 				}
 				_dinosaur.targetPoint = _dinosaur.currentPath.pop();
-			}else{
-				dx = (_dinosaur.targetPoint.x - _dinosaur.x);
-				dy = (_dinosaur.targetPoint.y - _dinosaur.y);
-				distance = Math.sqrt(Math.pow(dx,2) + Math.pow(dy,2));
-				_dinosaur.x += (dx/distance)*_dinosaur.Speed;
-				_dinosaur.y += (dy/distance)*_dinosaur.Speed;
 			}
         }
     }

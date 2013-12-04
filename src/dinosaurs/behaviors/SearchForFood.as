@@ -57,7 +57,7 @@ package dinosaurs.behaviors
 				var tmp:Vector.<Point> = VectorEngine.CurrentVectorEngine.ScatterTurkeys(new Point(_dinosaur.x, _dinosaur.y), range);
 				if (tmp[0] != tmp[1]) {
 					var tmpPath:Array = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmp[1].x, tmp[1].y, _dinosaur);
-					if (tmpPath.length != 0){
+					if (tmpPath && tmpPath.length != 0){
 						_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(
 							tmp[1].x,tmp[1].y,_dinosaur.currentPath[0].x,_dinosaur.currentPath[0].y,_dinosaur);
 						_dinosaur.currentPath = tmpPath.concat(_dinosaur.currentPath);

@@ -6,6 +6,8 @@ package dinosaurs
 	
 	import FiniteStateMachine.StateMachine;
 	
+	import island.TileMap;
+	
 	import island.tiles.Grass;
 	import island.tiles.Sand;
 	import island.tiles.Tile;
@@ -17,7 +19,7 @@ package dinosaurs
 		protected var _carnivore:Boolean;
 		protected var _birfTimer:int; 
 		protected var _stateMachine:StateMachine;
-		protected var _speed:int;
+		protected var _speed:Number;
         protected var _eatRate:Number;
 		
 		protected var _dirtCost:int;
@@ -58,8 +60,11 @@ package dinosaurs
 			
 		}
 		
-		public function get Speed():int {
-			return _speed;
+		public function get Speed():Number {
+			if (targetPoint)
+				return _speed / MoveCost(TileMap.CurrentMap.getTile(targetPoint.x, targetPoint.y));
+			else
+				return _speed;
 		}
 		
 		public function MoveCost(tile:Tile):int

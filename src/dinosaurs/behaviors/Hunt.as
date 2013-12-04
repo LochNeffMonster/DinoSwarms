@@ -52,8 +52,6 @@ package dinosaurs.behaviors
                     _dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
 					if(!_dinosaur.currentPath){
 						trace("bacon");
-						var tmpTile:Tile = TileMap.CurrentMap.getTile(Math.floor(tg.x), Math.floor(tg.y));
-						_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
 					}
                 }else if(_gallimimusPoint.x != tg.x || _gallimimusPoint.y != tg.y){
 					/*TileMap.CurrentMap.addChild(huntPathViz);
@@ -80,14 +78,16 @@ package dinosaurs.behaviors
                         _dinosaur.y = tg.y;
                     }
                 }
+				if (_dinosaur.currentPath){
                 // make sure not to overshoot the goalTile
-                for(var j:int=0;j<_dinosaur.Speed-1;++j){
-                    if(_dinosaur.currentPath.length == 1){
-                        break;
-                    }
-                    _dinosaur.currentPath.pop();
-                }
-                _dinosaur.targetPoint = _dinosaur.currentPath.pop();
+	                for(var j:int=0;j<_dinosaur.Speed-1;++j){
+	                    if(_dinosaur.currentPath.length == 1){
+	                        break;
+	                    }
+	                    _dinosaur.currentPath.pop();
+	                }
+	                _dinosaur.targetPoint = _dinosaur.currentPath.pop();
+				}
             }else{
                 //trace("HEY IM BEING CALLED YOU FUCKING ASSHOLE");
                 dx = (_dinosaur.targetPoint.x - _dinosaur.x);

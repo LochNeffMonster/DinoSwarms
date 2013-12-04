@@ -43,7 +43,8 @@ package dinosaurs.Engines
 		
 		public function GeneratePath(startX:int, startY:int, endX:int, endY:int, dino:Dinosaur):Array
 		{
-			if (!TileMap.CurrentMap.getTile(endX, endY).getTraversable)
+			if (endX < 0 || endY < 0 || endX == TileMap.WIDTH ||
+				endY == TileMap.HEIGHT || !TileMap.CurrentMap.getTile(endX, endY).getTraversable)
 				return null;
 			
 			startX = Math.floor(startX);
@@ -54,7 +55,6 @@ package dinosaurs.Engines
 			//setting variables and current node
 			_dino = dino;
 			_openList = [];
-
 			for(var i:int = 0; i<TileMap.WIDTH; ++i){
 				for(var j:int = 0; j<TileMap.HEIGHT; ++j){
 					_nodePos[i][j] = 0;

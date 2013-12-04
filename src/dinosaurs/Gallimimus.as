@@ -8,6 +8,7 @@ package dinosaurs
 	import FiniteStateMachine.Transition;
 	
 	import dinosaurs.behaviors.Eat;
+	import dinosaurs.behaviors.Flee;
 	import dinosaurs.behaviors.Flock;
 	import dinosaurs.behaviors.SearchForFood;
 	
@@ -120,6 +121,7 @@ package dinosaurs
 			flock.transitions.push(transitionFromFlock);
 			flock.transitions.push(transitionIfLeader);
 
+			//birth
 			var birthTransition:Transition = new Transition();
 			birthTransition.targetState = search;
 			birthTransition.condition = function():Boolean {		
@@ -131,6 +133,21 @@ package dinosaurs
 				}
 			};
 			eat.transitions.push(birthTransition);
+			
+			//fleeing
+			var flee:State = new State("Flee");
+			flee.action = new Flee(this).FleeAway;
+			var transitionToFlee:Transition = new Transition();
+			transitionToFlee.targetState = flee;
+			transitionToFlee.condition = RunAway;
+			var transitionFromFlee:Transition = new Transition();
+			transitionFromFlee.targetState = search;
+			transitionFromFlee.condition = StopRunning;
+			search.transitions.push(transitionToFlee);
+			flock.transitions.push(transitionToFlee);
+			eat.transitions.push(transitionToFlee);
+			flee.transitions.push(transitionFromFlee);
+			
 		}
 
 		
@@ -148,7 +165,8 @@ package dinosaurs
             //TileMap.CurrentMap.addChild(this);
             trace(this);
             parent.removeChild(this);
-			targetPointSprite.parent.removeChild(targetPointSprite);
+			if (targetPointSprite)
+				targetPointSprite.parent.removeChild(targetPointSprite);
             for(var i:int in DinoSwarms.galHolder){
                 if(DinoSwarms.galHolder[i] == this){
                     DinoSwarms.galHolder.splice(i,1);
@@ -209,13 +227,52 @@ package dinosaurs
 		public function IsLeader():Boolean{
 			if (Leader == this)
 			{
-				currentPath.splice(0);
+				if (currentPath)
+					currentPath.splice(0);
 				graphics.clear();
 				graphics.beginFill(0xFF0000);
 				graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
 				return true;
 			}
 			return false;
+		}
+		
+		public function RunAway():Boolean
+		{
+			for each(var t:TRex in DinoSwarms.trexHolder)
+			{
+				var tx:Number = t.x - this.x;
+				var ty:Number = t.y - this.y;
+				if(Math.sqrt(Math.pow(tx, 2) + Math.pow(ty, 2)) <= visionRange.x)
+				{
+					if (currentPath)
+						currentPath.splice(0);
+					graphics.clear();
+					graphics.beginFill(0xFFFF00);
+					graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+					return true;
+				}
+			}
+			return false;
+		}
+		
+		public function StopRunning():Boolean
+		{
+			for each(var t:TRex in DinoSwarms.trexHolder)
+			{
+				var tx:Number = t.x - this.x;
+				var ty:Number = t.y - this.y;
+				if(Math.sqrt(Math.pow(tx, 2) + Math.pow(ty, 2)) <= visionRange.x)
+				{
+					return false;
+				}
+			}
+			if (currentPath)
+				currentPath.splice(0);
+			graphics.clear();
+			graphics.beginFill(0xFF0000);
+			graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+			return true;
 		}
 	}
 }

@@ -34,7 +34,7 @@ package dinosaurs
             _speed = 2;
             _dirtCost = 1;
             _grassCost = 2;
-            _sandCost = 3;
+            _sandCost = 5;
             _eatRate = Math.random()*.6;
             _dinoDistance = 20;
             _carnivore = true;

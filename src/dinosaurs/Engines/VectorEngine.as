@@ -3,6 +3,7 @@ package dinosaurs.Engines
 	import flash.geom.Point;
 	
 	import dinosaurs.Dinosaur;
+	import dinosaurs.TRex;
 
 	public class VectorEngine
 	{
@@ -35,9 +36,9 @@ package dinosaurs.Engines
 			//use repulse distance to determine strength of repulsion
 			// > repulse distance = weak; < repulse distance = strong
 			hypno = hypno / repulseDistance;
-			hypno = repulseDistance / hypno;
-			target.x = target.x * hypno;
-			target.y = target.y * hypno;
+			hypno = hypno * hypno;
+			target.x += target.x / hypno;
+			target.y += target.y / hypno;
 			//get target
 			target.x += entity.x;
 			target.y += entity.y;
@@ -80,7 +81,30 @@ package dinosaurs.Engines
 			for each(var d:Dinosaur in DinoSwarms.galHolder)
 			{
 				//For each Turkey in range, repulses and comprimises vectors
-				if (Math.sqrt(Math.pow(d.x, 2) + Math.pow(d.y , 2)) <= range)
+				if (Math.sqrt(Math.pow(d.x - location.x, 2) + Math.pow(d.y - location.y , 2)) <= range)
+				{
+					tick += 1;
+					minorVector = PolarVector(masterVector[0], new Point(d.x, d.y));
+					masterVector = MidVector(masterVector, minorVector, tick);
+				}
+			}
+			return masterVector;
+		}
+		
+		public function FleeTurkeys(location:Point, range:Number):Vector.<Point>
+		{
+			//Primary Vectors
+			var masterVector:Vector.<Point> = new Vector.<Point>;
+			var minorVector:Vector.<Point> = new Vector.<Point>;
+			masterVector[0] = location;
+			masterVector[1] = location;
+			//keeps track of number of Turkeys in range
+			var tick:int = 0;
+			
+			for each(var d:TRex in DinoSwarms.trexHolder)
+			{
+				//For each Turkey in range, repulses and comprimises vectors
+				if (Math.sqrt(Math.pow(d.x - location.x, 2) + Math.pow(d.y - location.y, 2)) <= range)
 				{
 					tick += 1;
 					minorVector = PolarVector(masterVector[0], new Point(d.x, d.y));
