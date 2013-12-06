@@ -13,18 +13,19 @@ package dinosaurs
     import dinosaurs.behaviors.SearchForGallimimus;
     
     import island.TileMap;
+    import island.tiles.Tile;
     
     public class TRex extends Dinosaur
     {
         private static const GAL_TIMER:int = 120;
-        
+		public static const BIRF_PERIOD:int = 500; //amount of time it takes for a t-rex to birf
         private var checkGallimimusTimer:int = 0;
         private var _targetGallimimus:Gallimimus;
         private var _currentCorpse:Corpse;
 		
 		public var checkedSectors:Dictionary = new Dictionary();
         
-        public function TRex()
+        public function TRex(startX, startY)
         {
             currentPath = [];
             super();
@@ -38,6 +39,12 @@ package dinosaurs
             _eatRate = Math.random()*.6;
             _dinoDistance = 20;
             _carnivore = true;
+			_birfTimer = BIRF_PERIOD;
+			x = startX;
+			y = startY;
+			
+			TileMap.CurrentMap.addChild(this);
+			DinoSwarms.trexHolder.push(this);
             
             _stateMachine = new StateMachine();
             var search:State = new State("search");
@@ -59,6 +66,19 @@ package dinosaurs
             searchToHuntTransition.targetState = hunt;
             search.transitions.push(searchToHuntTransition);
             
+			var huntToSearchTransition:Transition = new Transition();
+			huntToSearchTransition.targetState = search;
+			huntToSearchTransition.condition = function():Boolean{
+				if(_targetGallimimus == null){
+					return true;
+				}
+				if(_targetGallimimus.parent == null){
+					_targetGallimimus = null;
+					return true;
+				}
+			}
+			hunt.transitions.push(huntToSearchTransition);
+			
             hunt.action = new Hunt(this).huntForGallimimus;
             var beginToEat:ITransition = new Transition();
             beginToEat.condition = function():Boolean {
@@ -97,9 +117,23 @@ package dinosaurs
             eat.transitions.push(goBackToSearch);
             
             _stateMachine.currentState = search;
+			
+			var birthTransition:Transition = new Transition();
+			birthTransition.targetState = search;
+			birthTransition.condition = function():Boolean {		
+				var currentTile:Tile = TileMap.CurrentMap.getTileFromCoord(x,y);
+				if(_birfTimer <= 0 && energy >= 100){
+					new TRex(x,y);
+					energy = 50;
+					_birfTimer = BIRF_PERIOD;
+				}
+			};
+			eat.transitions.push(birthTransition);
 			search.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName ); };
 			hunt.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName ); };
 			eat.entryAction = function():void { trace("current state is "+_stateMachine.currentStateName ); };
+			
+			
         }
         
         public function checkIfGallimimusInRange():Boolean {
@@ -122,6 +156,9 @@ package dinosaurs
             for(var a:int in actions){
                 actions[a]();
             }
+			if(_birfTimer>0){ 
+				_birfTimer--;
+			}
         }
         
         public function get CurrentCorpse():Corpse {

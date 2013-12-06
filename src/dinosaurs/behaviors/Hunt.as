@@ -28,7 +28,6 @@ package dinosaurs.behaviors
             var distance:Number;
 			
 			tick += 1;
-			
             // if the dino has a target tile to get to
             if(_dinosaur.targetPoint){
                 dx = Math.abs(_dinosaur.targetPoint.x - _dinosaur.x);
@@ -60,22 +59,6 @@ package dinosaurs.behaviors
 					if(!_dinosaur.currentPath){
 						trace("bacon");
 					}
-                }else if(_gallimimusPoint.x != tg.x || _gallimimusPoint.y != tg.y){
-					/*TileMap.CurrentMap.addChild(huntPathViz);
-                    _gallimimusPoint.x = tg.x;
-                    _gallimimusPoint.y = tg.y;
-                    var tempPath:Array;
-                    if(_dinosaur.currentPath.length > 0){
-                        tempPath = AStar.CurrentAStar.GeneratePath(_dinosaur.currentPath[_dinosaur.currentPath.length-1].x,_dinosaur.currentPath[_dinosaur.currentPath.length-1].y
-                            ,tg.x,tg.y,_dinosaur);
-                    }else{
-                        tempPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tg.x,tg.y,_dinosaur);
-                    }
-                    if(tempPath){
-                        while(tempPath.length != 0){
-                            _dinosaur.currentPath.splice(tempPath.pop(), 0);
-                        }
-                    }*/
                 }else if(_dinosaur.currentPath.length == 0){
                     dx = Math.abs(tg.x - _dinosaur.x);
                     dy = Math.abs(tg.y - _dinosaur.y);

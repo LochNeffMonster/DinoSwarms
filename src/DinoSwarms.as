@@ -142,12 +142,7 @@ package
 			}
             
             for(var j:int = 0; j<1;++j){
-                var trex:TRex = new TRex();
-                randomIndex = Math.floor(Math.random()*grassArray.length);
-                trex.x = (grassArray[randomIndex]).x;
-                trex.y = (grassArray[randomIndex]).y;
-                TileMap.CurrentMap.addChild(trex);
-                trexHolder.push(trex);
+                var trex:TRex = new TRex(grassArray[randomIndex].x, grassArray[randomIndex].y);
             }
 		}
     }
