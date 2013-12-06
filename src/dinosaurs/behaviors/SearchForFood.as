@@ -69,16 +69,22 @@ package dinosaurs.behaviors
 			
 			// if the dino doesn't currently have a target
 			if(!_dinosaur.targetPoint){
+				var count:int = 0;
 				// while the dino doesn't have a path, or that they are at their target already
 				while(!_dinosaur.currentPath || _dinosaur.currentPath.length == 0){
+					++count;
 					var tmpPoint:Point = getNewPointInSector();
+					if(count > 20){
+						tmpPoint.y = int(TileMap.HEIGHT/2);
+						tmpPoint.x = int(TileMap.WIDTH/2);
+					}
 					_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmpPoint.x,tmpPoint.y,_dinosaur);
 
                     if(!_dinosaur.currentPath){
 
-                        for(var i:int in _dinosaur.shuffledGrass){
-                            if(_dinosaur.goalTile == _dinosaur.shuffledGrass[i]){
-                                _dinosaur.shuffledGrass.splice(i,1);
+                        for(var i:int in _dinosaur.shuffledGrass[_dinosaur.goalTile.x/Grass.GROWTH_RES][_dinosaur.goalTile.y/Grass.GROWTH_RES]){
+                            if(_dinosaur.goalTile == _dinosaur.shuffledGrass[_dinosaur.goalTile.x/Grass.GROWTH_RES][_dinosaur.goalTile.y/Grass.GROWTH_RES][i]){
+                                _dinosaur.shuffledGrass[_dinosaur.goalTile.x/Grass.GROWTH_RES][_dinosaur.goalTile.y/Grass.GROWTH_RES].splice(i,1);
                                 break;
                             }
                         }

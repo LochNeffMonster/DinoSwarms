@@ -43,10 +43,12 @@ package dinosaurs.Engines
 		
 		public function GeneratePath(startX:int, startY:int, endX:int, endY:int, dino:Dinosaur):Array
 		{
+			var count:int = 0;
 			if (endX < 0 || endY < 0 || endX == TileMap.WIDTH ||
 				endY == TileMap.HEIGHT || !TileMap.CurrentMap.getTile(endX, endY).getTraversable)
 				return null;
 			
+			trace("Generating Path");
 			startX = Math.floor(startX);
 			startY = Math.floor(startY);
 			endX = Math.floor(endX);
@@ -73,6 +75,7 @@ package dinosaurs.Engines
 			while(_openList.length > 0)
 			{
 				//next node always at top of priority heap
+				count++;
 				_currentNode = _openList[1];
 				PopOpenList();
 				var _Pos:Point = _currentNode.Coordinate;
@@ -134,9 +137,13 @@ package dinosaurs.Engines
 				
 				_currentNode.setState(2);
 				_allNodes[_Pos.x][_Pos.y] = _currentNode;
+				if(count > 1000){
+					break;
+				}
 			}
-			if (_Pos.x != _end.x && _Pos.y != _end.y )
+			if ((_Pos.x != _end.x && _Pos.y != _end.y ) || count > 1000)
 			{
+				("COULDN'T FIND PATH OK!?");
 				return null;
 			}
 				
@@ -164,9 +171,10 @@ package dinosaurs.Engines
 			_openList[currPos] = NewNode;
 			var parentNode:int = currPos / 2;
 			//sorts the new node up the tree based on its cost
+			var count:int = 0;
 			while (true)
 			{
-				
+				count++;
 				if (currPos != 1 && newCost < _openList[parentNode].EstimatedCost)
 				{
 					_openList[currPos] = _openList[parentNode];
@@ -183,7 +191,7 @@ package dinosaurs.Engines
 					break;
 				}
 			}
-			
+			trace("add open: " + count);
 		}
 		
 		private function PopOpenList():void
@@ -191,8 +199,10 @@ package dinosaurs.Engines
 			var currPos:int = 1;
 			var tmpNode:Node = _openList.pop();
 			_openList[1] = tmpNode;
+			var count:int = 0;
 			while (true)
 			{
+				count++;
 				if(!_openList[ (2*currPos)]) break;
 				else if(_openList[ (2*currPos)] && !_openList[ ((2*currPos) + 1)]){
 					if (tmpNode.EstimatedCost > _openList[ (2 * currPos)].EstimatedCost)
@@ -242,6 +252,7 @@ package dinosaurs.Engines
 					}
 				}
 			}
+			trace("Popout: " + count);
 		}
 		
 		private function UpdateOpenList(RefNode:Node):void
@@ -252,8 +263,10 @@ package dinosaurs.Engines
 			_openList[currPos] =RefNode;
 			
 			//sorts the ref node up the tree based on its cost
+			var count:int = 0;
 			while (true)
 			{
+				count++;
 				if (currPos == 1)
 				{
 					_nodePos[RefNode.Coordinate.x][RefNode.Coordinate.y] = currPos;
@@ -275,7 +288,7 @@ package dinosaurs.Engines
 					break;
 				}
 			}
-			
+			trace("update open: " + count);
 		}
 		
 		private function GenerateCost(tile:Tile):int

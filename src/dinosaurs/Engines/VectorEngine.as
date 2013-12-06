@@ -71,8 +71,8 @@ package dinosaurs.Engines
 		public function ScatterTurkeys(location:Point, range:Number):Vector.<Point>
 		{
 			//Primary Vectors
-			var masterVector:Vector.<Point> = new Vector.<Point>;
-			var minorVector:Vector.<Point> = new Vector.<Point>;
+			var masterVector:Vector.<Point> = new Vector.<Point>();
+			var minorVector:Vector.<Point> = new Vector.<Point>();
 			masterVector[0] = location;
 			masterVector[1] = location;
 			//keeps track of number of Turkeys in range
@@ -83,9 +83,16 @@ package dinosaurs.Engines
 				//For each Turkey in range, repulses and comprimises vectors
 				if (Math.sqrt(Math.pow(d.x - location.x, 2) + Math.pow(d.y - location.y , 2)) <= range)
 				{
-					tick += 1;
+					++tick;
 					minorVector = PolarVector(masterVector[0], new Point(d.x, d.y));
+					if(!(minorVector[1] is Point)){
+						trace("not a point!");
+					}
+					
 					masterVector = MidVector(masterVector, minorVector, tick);
+					if(!(masterVector[1].x is Number)){
+						trace("not a point!");
+					}
 				}
 			}
 			return masterVector;
@@ -108,7 +115,13 @@ package dinosaurs.Engines
 				{
 					tick += 1;
 					minorVector = PolarVector(masterVector[0], new Point(d.x, d.y));
+					if(!(minorVector[1] is Point)){
+						trace("not a point!");
+					}
 					masterVector = MidVector(masterVector, minorVector, tick);
+					if(!(masterVector[1] is Point)){
+						trace("not a point!");
+					}
 				}
 			}
 			return masterVector;
