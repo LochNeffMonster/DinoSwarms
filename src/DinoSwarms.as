@@ -136,7 +136,7 @@ package
 			var grassArray:Array = _tileMap.getTilesFromClass(Grass);
             var randomIndex:int;
 			
-			for(var i:int = 0; i<30;i++){
+			for(var i:int = 0; i<15;i++){
 				randomIndex = Math.floor(Math.random()*grassArray.length);
 				var dino:Gallimimus = new Gallimimus((grassArray[randomIndex]).x, (grassArray[randomIndex]).y);
 			}

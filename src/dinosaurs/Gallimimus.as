@@ -32,7 +32,7 @@ package dinosaurs
 			_birfTimer = BIRF_PERIOD;
 
 			graphics.beginFill(0xFF0000);
-			graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+			graphics.drawRect(0,0,TileMap.TILE_SIZE*3,TileMap.TILE_SIZE*3);
 			graphics.endFill();
             _dinoDistance = 12;
 
@@ -194,7 +194,7 @@ package dinosaurs
 									return false;
 								graphics.clear();
 								graphics.beginFill(0xFFFFFF);
-								graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+								graphics.drawRect(0,0,TileMap.TILE_SIZE*3,TileMap.TILE_SIZE*3);
 								return true;
 							}
 						}
@@ -218,7 +218,7 @@ package dinosaurs
 					currentPath.splice(0);
 				graphics.clear();
 				graphics.beginFill(0xFF0000);
-				graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+				graphics.drawRect(0,0,TileMap.TILE_SIZE*3,TileMap.TILE_SIZE*3);
 				return true;
 			}
 			return false;
@@ -231,7 +231,7 @@ package dinosaurs
 					currentPath.splice(0);
 				graphics.clear();
 				graphics.beginFill(0xFF0000);
-				graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+				graphics.drawRect(0,0,TileMap.TILE_SIZE*3,TileMap.TILE_SIZE*3);
 				return true;
 			}
 			return false;
@@ -249,7 +249,7 @@ package dinosaurs
 						currentPath.splice(0);
 					graphics.clear();
 					graphics.beginFill(0xFFFF00);
-					graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+					graphics.drawRect(0,0,TileMap.TILE_SIZE*3,TileMap.TILE_SIZE*3);
 					return true;
 				}
 			}
@@ -271,7 +271,7 @@ package dinosaurs
 				currentPath.splice(0);
 			graphics.clear();
 			graphics.beginFill(0xFF0000);
-			graphics.drawRect(0,0,TileMap.TILE_SIZE*2,TileMap.TILE_SIZE*2);
+			graphics.drawRect(0,0,TileMap.TILE_SIZE*3,TileMap.TILE_SIZE*3);
 			return true;
 		}
 	}
