@@ -81,13 +81,13 @@ package dinosaurs.behaviors
 					_dinosaur.currentPath = AStar.CurrentAStar.GeneratePath(_dinosaur.x,_dinosaur.y,tmpPoint.x,tmpPoint.y,_dinosaur);
 
                     if(!_dinosaur.currentPath){
-/*
-                        for(var i:int in _dinosaur.shuffledGrass[_dinosaur.goalTile.x/Grass.GROWTH_RES][_dinosaur.goalTile.y/Grass.GROWTH_RES]){
-                            if(_dinosaur.goalTile == _dinosaur.shuffledGrass[_dinosaur.goalTile.x/Grass.GROWTH_RES][_dinosaur.goalTile.y/Grass.GROWTH_RES][i]){
-                                _dinosaur.shuffledGrass[_dinosaur.goalTile.x/Grass.GROWTH_RES][_dinosaur.goalTile.y/Grass.GROWTH_RES].splice(i,1);
+
+                        for(var i:int in _dinosaur.shuffledGrass[Math.floor(_dinosaur.goalTile.x/Grass.GROWTH_RES)][Math.floor(_dinosaur.goalTile.y/Grass.GROWTH_RES)]){
+                            if(_dinosaur.goalTile == _dinosaur.shuffledGrass[Math.floor(_dinosaur.goalTile.x/Grass.GROWTH_RES)][Math.floor(_dinosaur.goalTile.y/Grass.GROWTH_RES)][i]){
+                                _dinosaur.shuffledGrass[Math.floor(_dinosaur.goalTile.x/Grass.GROWTH_RES)][Math.floor(_dinosaur.goalTile.y/Grass.GROWTH_RES)].splice(i,1);
                                 break;
                             }
-                        }*/
+                        }
                     }
 				}
 				//make sure to overshoot the goalTile
