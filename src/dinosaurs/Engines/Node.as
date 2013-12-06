@@ -53,6 +53,22 @@ package dinosaurs.Engines
 		{
 			return _Connection;
 		}
+		
+		public function setProperties(Connection:Point, CostSoFar:Number, Heuristic:Number, State:int):void{
+			_Connection = Connection;
+			_CostSoFar = CostSoFar;
+			_Heuristic = Heuristic;
+			_EstimatedCost = _CostSoFar + _Heuristic;
+			_State = State;
+		}
+		
+		public function reset():void{
+			_Connection = null;
+			_CostSoFar = 0;
+			_Heuristic = Number.MAX_VALUE;
+			_EstimatedCost = _CostSoFar + _Heuristic;
+			_State = 0;
+		}
 	}
 }
 import dinosaurs.Engines;

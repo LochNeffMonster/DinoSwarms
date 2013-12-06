@@ -32,7 +32,10 @@ package dinosaurs.Engines
 			_allNodes = []; //quick Node look up
 			for(var i:int = 0; i<TileMap.WIDTH; ++i){
 				_nodePos.push([]);
-				_allNodes.push([]);
+				_allNodes[i] = [];
+				for(var j:int = 0; j<TileMap.HEIGHT; ++j){
+					_allNodes[i][j] = new Node(i, j, null, 0, Number.MAX_VALUE, 0);
+				}
 			}
 
 		}
@@ -58,7 +61,7 @@ package dinosaurs.Engines
 			for(var i:int = 0; i<TileMap.WIDTH; ++i){
 				for(var j:int = 0; j<TileMap.HEIGHT; ++j){
 					_nodePos[i][j] = 0;
-					_allNodes[i][j] = 0;
+					_allNodes[i][j].reset();
 				}
 			}
 			_end = new Point(endX,endY);
@@ -97,26 +100,28 @@ package dinosaurs.Engines
 						if (!TileMap.CurrentMap.getTileFromCoord(_Pos.x + i, _Pos.y + j).getTraversable()) 
 						{continue;}
 						
-						var tempNode:Node = new Node(_Pos.x + i, _Pos.y + j, _Pos, _currentNode.CostSoFar
-							+ GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j)),
-							GenerateHeuristic(_Pos.x + i, _Pos.y + j), 1);
+						//var tempNode:Node = null;
 						
-						if(GenerateHeuristic(_Pos.x + i, _Pos.y + j) == 0)
-							trace("found it");
+						/*if(GenerateHeuristic(_Pos.x + i, _Pos.y + j) == 0)
+							trace("found it");*/
 						
-						if (_allNodes[(_Pos.x + i)][(_Pos.y + j)] is Node) {
+						var neighborCostSoFar:Number =  _currentNode.CostSoFar + GenerateCost(TileMap.CurrentMap.getTile(_Pos.x + i, _Pos.y + j));
+						var neighborHeuristic:Number = GenerateHeuristic(_Pos.x + i, _Pos.y + j);
+						var neighborEstimatedCost:Number = neighborHeuristic + neighborCostSoFar;
+						
+						if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].State != 0) {
 							
-							if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].EstimatedCost > tempNode.EstimatedCost)
+							if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].EstimatedCost > neighborEstimatedCost)
 							{
 								if (_allNodes[(_Pos.x + i)][(_Pos.y + j)].State == 1)
 								{
-									UpdateOpenList(tempNode);
-									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
+									_allNodes[(_Pos.x + i)][(_Pos.y + j)].setProperties(_Pos, neighborCostSoFar, neighborHeuristic, 1);
+									UpdateOpenList(_allNodes[(_Pos.x + i)][(_Pos.y + j)]);
 								}
 								else
 								{
-									AddOpenList(tempNode);
-									_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
+									_allNodes[(_Pos.x + i)][(_Pos.y + j)].setProperties(_Pos, neighborCostSoFar, neighborHeuristic, 1);
+									AddOpenList(_allNodes[(_Pos.x + i)][(_Pos.y + j)]);
 								}
 							}
 							else
@@ -124,8 +129,8 @@ package dinosaurs.Engines
 						}
 						else
 						{
-							AddOpenList(tempNode);
-							_allNodes[(_Pos.x + i)][(_Pos.y + j)] = tempNode;
+							_allNodes[(_Pos.x + i)][(_Pos.y + j)].setProperties(_Pos, neighborCostSoFar, neighborHeuristic, 1);
+							AddOpenList(_allNodes[(_Pos.x + i)][(_Pos.y + j)]);
 						}
 					}
 				}
