@@ -27,7 +27,7 @@ package dinosaurs
 			_grassCost = 2;
 			_sandCost = 3;
 
-            _eatRate = Math.random()*.015 + .01;
+            _eatRate = Math.random()*.015*5 + .01;
 
 			_birfTimer = BIRF_PERIOD;
 

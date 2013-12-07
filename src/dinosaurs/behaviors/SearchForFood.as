@@ -52,7 +52,7 @@ package dinosaurs.behaviors
 			}
 			
 			//used to avoid collisions with other gali
-			if (tick >= 120 && _dinosaur.currentPath.length != 0)
+			if (tick >= 120 && _dinosaur.currentPath && _dinosaur.currentPath.length != 0)
 			{
 				var tmp:Vector.<Point> = VectorEngine.CurrentVectorEngine.ScatterTurkeys(new Point(_dinosaur.x, _dinosaur.y), range);
 				if (tmp[0] != tmp[1]) {

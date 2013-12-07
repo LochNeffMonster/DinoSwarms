@@ -12,7 +12,7 @@ package dinosaurs.behaviors
         
         public function eat():void {
             (_dinosaur as TRex).CurrentCorpse.percentEaten += _dinosaur.EatRate;
-			_dinosaur.energy += 0.5;
+			_dinosaur.energy += 3;
             trace("Eating: " + (_dinosaur as TRex).CurrentCorpse.percentEaten);
         }
     }

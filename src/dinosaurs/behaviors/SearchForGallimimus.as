@@ -88,6 +88,8 @@ package dinosaurs.behaviors
                 var distanceToGrass:int = Math.sqrt((Math.pow(g.x - _dinosaur.x,2) + Math.pow(g.y - _dinosaur.y,2)));
                 if(g.IsEdible && !fallbackGrass){
                     fallbackGrass = g;
+					var randomIndex:int = Math.floor(Math.random()*DinoSwarms.grassArray.length);
+					return new Point(DinoSwarms.grassArray[randomIndex].x, DinoSwarms.grassArray[randomIndex].y);
                 }
                 if(distanceToGrass < _dinosaur.DinoVisionDistance && g.IsEdible){
                     fallbackGrass = g;

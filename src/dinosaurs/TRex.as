@@ -159,7 +159,24 @@ package dinosaurs
 			if(_birfTimer>0){ 
 				_birfTimer--;
 			}
+			energy-=0.3
+			if(energy <= 0){
+				this.destroy();
+			}
         }
+		
+		public function destroy():void {
+			//TileMap.CurrentMap.addChild(this);
+			trace(this);
+			parent.removeChild(this);
+			if (targetPointSprite)
+				targetPointSprite.parent.removeChild(targetPointSprite);
+			for(var i:int in DinoSwarms.galHolder){
+				if(DinoSwarms.trexHolder[i] == this){
+					DinoSwarms.trexHolder.splice(i,1);
+				}
+			}
+		}
         
         public function get CurrentCorpse():Corpse {
             return _currentCorpse;
